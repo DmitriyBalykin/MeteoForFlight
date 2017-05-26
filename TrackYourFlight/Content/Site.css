@@ -26,3 +26,7 @@ textarea {
 div.map {
     height: 800px;
 }
+
+div#meteoTable {
+    height: 800px;
+}

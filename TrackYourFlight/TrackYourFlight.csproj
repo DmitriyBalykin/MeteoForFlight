@@ -204,7 +204,6 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MapController.cs" />
-    <Compile Include="Models\MeteoDataModel.cs" />
     <Compile Include="WebApi\MeteoController.cs" />
     <Compile Include="Controllers\MeteoController.cs" />
     <Compile Include="Global.asax.cs">

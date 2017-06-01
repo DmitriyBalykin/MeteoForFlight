@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Net.Http;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Mvc;
+using TrackYourFlight.Utilities;
 
 namespace TrackYourFlight.WebApi
 {
@@ -9,14 +11,16 @@ namespace TrackYourFlight.WebApi
     {
         private const string BaseUrl = "https://rucsoundings.noaa.gov/get_soundings.cgi?data_source=GFS&latest=latest";
 
-        public ActionResult Data()
+        public async Task<ActionResult> Data()
         {
             var httpClient = new HttpClient();
-            var uri = GetGfsDataUrl(2017, "May", 26, 10, 0, 36, 50.5, 30.5);
+            var uri = GetGfsDataUrl(2017, "Jun", 1, 10, 0, 36, 50.5, 30.5);
 
-            var result = httpClient.GetStringAsync(uri);
+            var result = await httpClient.GetStringAsync(uri);
 
-            return new JsonResult();
+            var data = DiagramForecastParser.Parse(result);
+
+            return new JsonResult { Data = data };
         }
 
         private static Uri GetGfsDataUrl(int year, string monthName, int day, int hour, int minute, int hoursInterval, double latitude, double longitude)

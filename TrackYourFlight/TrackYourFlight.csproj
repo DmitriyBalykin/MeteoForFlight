@@ -204,6 +204,11 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MapController.cs" />
+    <Compile Include="Dto\CoordinatePoint.cs" />
+    <Compile Include="Dto\MeteoLayerDataModel.cs" />
+    <Compile Include="Dto\MeteoStateModel.cs" />
+    <Compile Include="Utilities\DateTimeParser.cs" />
+    <Compile Include="Utilities\DiagramForecastParser.cs" />
     <Compile Include="Controllers\MeteoController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>

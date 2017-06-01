@@ -8,7 +8,7 @@ $(document).ready(function () {
         success: function (response) {
             var meteElement = $('#meteoTable');
 
-            meteElement.html(response);
+            meteElement.text(JSON.stringify(response));
         },
         error: function(data) {
             window.console.error(data.statusText);

@@ -5,12 +5,13 @@ using System.Web.Http;
 using System.Web.Mvc;
 using TrackYourFlight.Utilities;
 
-namespace TrackYourFlight.WebApi
+namespace TrackYourFlight.WebApiControllers
 {
     public class MeteoController : ApiController
     {
         private const string BaseUrl = "https://rucsoundings.noaa.gov/get_soundings.cgi?data_source=GFS&latest=latest";
 
+        [System.Web.Http.HttpGet]
         public async Task<ActionResult> Data()
         {
             var httpClient = new HttpClient();
@@ -20,7 +21,7 @@ namespace TrackYourFlight.WebApi
 
             var data = DiagramForecastParser.Parse(result);
 
-            return new JsonResult { Data = data };
+            return new JsonResult { Data = data, JsonRequestBehavior = JsonRequestBehavior.AllowGet};
         }
 
         private static Uri GetGfsDataUrl(int year, string monthName, int day, int hour, int minute, int hoursInterval, double latitude, double longitude)

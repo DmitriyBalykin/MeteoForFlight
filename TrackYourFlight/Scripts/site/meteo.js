@@ -4,7 +4,7 @@ $(document).ready(function () {
     $.ajax({
         type: 'GET',
         dataType: 'json',
-        url: 'Meteo/Data',
+        url: 'api/Meteo/Data',
         success: function (response) {
             var meteElement = $('#meteoTable');
 

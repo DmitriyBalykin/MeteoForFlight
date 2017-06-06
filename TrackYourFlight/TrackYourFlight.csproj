@@ -204,6 +204,10 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MapController.cs" />
+    <Compile Include="Controllers\MeteoController.cs" />
+    <Compile Include="DataContext\ApplicationDbContext.cs" />
+    <Compile Include="DataContext\BaseDataContext.cs" />
+    <Compile Include="DataContext\ForecastDataContext.cs" />
     <Compile Include="Dto\CoordinatePoint.cs" />
     <Compile Include="Dto\MeteoLayerDataModel.cs" />
     <Compile Include="Dto\MeteoStateModel.cs" />

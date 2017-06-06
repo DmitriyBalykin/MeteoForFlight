@@ -1,15 +1,16 @@
 namespace TrackYourFlight.Migrations
 {
     using System.Data.Entity.Migrations;
+    using DataContext;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<TrackYourFlight.Models.ApplicationDbContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<ApplicationDbContext>
     {
         public Configuration()
         {
             AutomaticMigrationsEnabled = false;
         }
 
-        protected override void Seed(TrackYourFlight.Models.ApplicationDbContext context)
+        protected override void Seed(ApplicationDbContext context)
         {
             //  This method will be called after migrating to the latest version.
 

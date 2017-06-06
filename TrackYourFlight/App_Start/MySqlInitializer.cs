@@ -1,7 +1,7 @@
 ﻿using System.Data.Entity;
 using System.Data.Entity.Infrastructure;
 using System.Linq;
-using TrackYourFlight.Models;
+using TrackYourFlight.DataContext;
 
 namespace TrackYourFlight
 {

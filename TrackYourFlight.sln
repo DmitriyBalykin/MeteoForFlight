@@ -7,8 +7,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrackYourFlight", "TrackYou
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TrackYourFlight.Tests", "TrackYourFlight.Tests\TrackYourFlight.Tests.csproj", "{7D91D333-9EA9-41DE-88DF-535534116334}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Common", "Common\Common.csproj", "{EC420525-1EB5-4F7E-BB89-1F2119101B03}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -23,10 +21,6 @@ Global
 		{7D91D333-9EA9-41DE-88DF-535534116334}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7D91D333-9EA9-41DE-88DF-535534116334}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7D91D333-9EA9-41DE-88DF-535534116334}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EC420525-1EB5-4F7E-BB89-1F2119101B03}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EC420525-1EB5-4F7E-BB89-1F2119101B03}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EC420525-1EB5-4F7E-BB89-1F2119101B03}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EC420525-1EB5-4F7E-BB89-1F2119101B03}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

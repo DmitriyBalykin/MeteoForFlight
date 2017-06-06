@@ -211,6 +211,10 @@
     <Compile Include="Dto\CoordinatePoint.cs" />
     <Compile Include="Dto\MeteoLayerDataModel.cs" />
     <Compile Include="Dto\MeteoStateModel.cs" />
+    <Compile Include="Dto\Requests\ForecastDataRequest.cs" />
+    <Compile Include="Interfaces\IForecastDataService.cs" />
+    <Compile Include="Models\ForecastModel.cs" />
+    <Compile Include="Services\ForecastDataService.cs" />
     <Compile Include="Utilities\DateTimeParser.cs" />
     <Compile Include="Utilities\DiagramForecastParser.cs" />
     <Compile Include="WebApiControllers\MeteoController.cs" />

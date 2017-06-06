@@ -210,7 +210,6 @@
     <Compile Include="Utilities\DateTimeParser.cs" />
     <Compile Include="Utilities\DiagramForecastParser.cs" />
     <Compile Include="WebApiControllers\MeteoController.cs" />
-    <Compile Include="Controllers\MeteoController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>

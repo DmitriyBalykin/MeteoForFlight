@@ -213,6 +213,10 @@
     <Compile Include="Dto\MeteoStateModel.cs" />
     <Compile Include="Dto\Requests\ForecastDataRequest.cs" />
     <Compile Include="Interfaces\IForecastDataService.cs" />
+    <Compile Include="Migrations\201706071523179_ForecastDataContext.cs" />
+    <Compile Include="Migrations\201706071523179_ForecastDataContext.Designer.cs">
+      <DependentUpon>201706071523179_ForecastDataContext.cs</DependentUpon>
+    </Compile>
     <Compile Include="Models\ForecastModel.cs" />
     <Compile Include="Services\ForecastDataService.cs" />
     <Compile Include="Utilities\DateTimeParser.cs" />
@@ -317,6 +321,11 @@
       <SubType>Designer</SubType>
     </Content>
     <None Include="Project_Readme.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201706071523179_ForecastDataContext.resx">
+      <DependentUpon>201706071523179_ForecastDataContext.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

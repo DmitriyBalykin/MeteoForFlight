@@ -8,21 +8,21 @@ namespace TrackYourFlight.DataContext
     {
         public ForecastDataContext()
         {
-            var fc = this.Forecast.Create();
+            //var fc = this.Forecast.Create();
 
-            fc.Id = "test_id_001";
+            //fc.Id = "test_id_001";
 
-            var point = new CoordinatePoint
-            {
-                Latitude = 50.5,
-                Longitude = 30.5
-            };
+            //var point = new CoordinatePoint
+            //{
+            //    Latitude = 50.5,
+            //    Longitude = 30.5
+            //};
 
-            fc.Point = point;
+            //fc.Point = point;
 
 
-            this.Forecast.Add(fc);
-            this.SaveChanges();
+            //this.Forecast.Add(fc);
+            //this.SaveChanges();
         }
 
         public DbSet<ForecastModel> Forecast { get; set; }

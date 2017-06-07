@@ -39,6 +39,7 @@ namespace TrackYourFlight.Services
 
                     var forecastModel = new ForecastModel
                     {
+                        Id = id,
                         LoadTime = DateTime.UtcNow,
                         Time = time,
                         Point = point,

@@ -1,4 +1,5 @@
 ﻿using System.Data.Entity;
+using System.Data.Entity.SqlServer;
 
 namespace TrackYourFlight.Migrations
 {
@@ -7,6 +8,7 @@ namespace TrackYourFlight.Migrations
         public MySqlConfiguration()
         {
             this.SetHistoryContext("MySql.Data.MySqlClient", (connection, schema) => new MySqlHistoryContext(connection, schema));
+            this.SetExecutionStrategy("MySql.Data.MySqlClient", () => new SqlAzureExecutionStrategy());
         }
     }
 }

@@ -6,8 +6,8 @@ namespace TrackYourFlight.Dto.Requests
     {
         public DateTime Time { get; set; }
 
-        public CoordinatePoint Point { get; set; }
-
         public int Interval { get; set; }
+
+        public CoordinatePoint Point { get; set; }
     }
 }

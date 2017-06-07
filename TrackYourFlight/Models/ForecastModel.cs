@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Globalization;
 using TrackYourFlight.Dto;
 
@@ -11,13 +12,16 @@ namespace TrackYourFlight.Models
         [Key]
         public string Id { get; set; }
 
+        [ForeignKey("Point")]
+        public int PointId { get; set; }
+
         [Required]
         [DisplayName("LoadTime")]
         public DateTime LoadTime { get; set; }
 
         [Required]
-        [DisplayName("Coordinates")]
-        public CoordinatePoint Coordinates { get; set; }
+        [DisplayName("Point")]
+        public CoordinatePoint Point { get; set; }
 
         [DisplayName("ForecastTime")]
         public DateTime Time { get; set; }

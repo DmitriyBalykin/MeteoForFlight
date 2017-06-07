@@ -4,7 +4,6 @@ using System.Data.Entity;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web;
 using TrackYourFlight.DataContext;
 using TrackYourFlight.Dto;
 using TrackYourFlight.Interfaces;
@@ -42,7 +41,7 @@ namespace TrackYourFlight.Services
                     {
                         LoadTime = DateTime.UtcNow,
                         Time = time,
-                        Coordinates = point,
+                        Point = point,
                         Value = resultString
                     };
 

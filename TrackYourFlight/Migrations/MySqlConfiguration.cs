@@ -1,4 +1,5 @@
 ﻿using System.Data.Entity;
+using MySql.Data.Entity;
 
 namespace TrackYourFlight.Migrations
 {
@@ -7,6 +8,8 @@ namespace TrackYourFlight.Migrations
         public MySqlConfiguration()
         {
             this.SetHistoryContext("MySql.Data.MySqlClient", (connection, schema) => new MySqlHistoryContext(connection, schema));
+            this.SetExecutionStrategy("MySql.Data.MySqlClient", () => new MySqlExecutionStrategy());
+            this.SetMigrationSqlGenerator("MySql.Data.MySqlClient", () => new MySqlMigrationSqlGenerator());
         }
     }
 }

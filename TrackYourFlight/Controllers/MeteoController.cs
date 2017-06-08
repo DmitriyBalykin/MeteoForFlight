@@ -2,6 +2,7 @@
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using TrackYourFlight.Utilities;
 
 namespace TrackYourFlight.Controllers
 {
@@ -18,11 +19,19 @@ namespace TrackYourFlight.Controllers
         public async Task<ActionResult> Data()
         {
             var httpClient = new HttpClient();
-            var uri = GetGfsDataUrl(2017, "May", 26, 10, 0, 36, 50.5, 30.5);
+            var uri = GetGfsDataUrl(2017, "Jun", 1, 10, 0, 9, 50.5, 30.5);
 
             var result = await httpClient.GetStringAsync(uri);
 
-            return new JsonResult();
+            var data = DiagramForecastParser.Parse(result);
+            var jsonResult = new JsonResult
+            {
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet,
+                Data = data,
+                MaxJsonLength = int.MaxValue
+            };
+
+            return jsonResult;
         }
 
         private static Uri GetGfsDataUrl(int year, string monthName, int day, int hour, int minute, int hoursInterval, double latitude, double longitude)

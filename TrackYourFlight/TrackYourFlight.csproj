@@ -106,10 +106,6 @@
       <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -208,13 +204,28 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="Controllers\MapController.cs" />
+    <Compile Include="Controllers\MeteoController.cs" />
+    <Compile Include="DataContext\ApplicationDbContext.cs" />
+    <Compile Include="DataContext\BaseDataContext.cs" />
+    <Compile Include="DataContext\ForecastDataContext.cs" />
     <Compile Include="Dto\CoordinatePoint.cs" />
     <Compile Include="Dto\MeteoLayerDataModel.cs" />
     <Compile Include="Dto\MeteoStateModel.cs" />
+    <Compile Include="Dto\Requests\ForecastDataRequest.cs" />
+    <Compile Include="Interfaces\IForecastDataService.cs" />
+    <Compile Include="Items\201706081032489_ForecastDataContext1.cs" />
+    <Compile Include="Items\201706081032489_ForecastDataContext1.Designer.cs">
+      <DependentUpon>201706081032489_ForecastDataContext1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Items\201706071523179_ForecastDataContext.cs" />
+    <Compile Include="Items\201706071523179_ForecastDataContext.Designer.cs">
+      <DependentUpon>201706071523179_ForecastDataContext.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Models\ForecastModel.cs" />
+    <Compile Include="Services\ForecastDataService.cs" />
     <Compile Include="Utilities\DateTimeParser.cs" />
     <Compile Include="Utilities\DiagramForecastParser.cs" />
     <Compile Include="WebApiControllers\MeteoController.cs" />
-    <Compile Include="Controllers\MeteoController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -263,7 +274,9 @@
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\site\meteo.js" />
     <Content Include="Scripts\_references.js" />
-    <Content Include="Web.config" />
+    <Content Include="Web.config">
+      <SubType>Designer</SubType>
+    </Content>
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </Content>
@@ -301,6 +314,8 @@
     <Content Include="Scripts\jquery-3.1.1.min.map" />
     <Content Include="Views\Map\Index.cshtml" />
     <Content Include="Views\Meteo\Index.cshtml" />
+    <Content Include="Scripts\jquery-3.1.1.slim.min.map" />
+    <Content Include="Scripts\jquery-3.1.1.min.map" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -310,6 +325,14 @@
       <SubType>Designer</SubType>
     </Content>
     <None Include="Project_Readme.html" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Items\201706081032489_ForecastDataContext1.resx">
+      <DependentUpon>201706081032489_ForecastDataContext1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Items\201706071523179_ForecastDataContext.resx">
+      <DependentUpon>201706071523179_ForecastDataContext.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

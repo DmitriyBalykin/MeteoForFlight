@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Linq;
+using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Mvc;
 using TrackYourFlight.Dto.Requests;
@@ -13,10 +14,25 @@ namespace TrackYourFlight.WebApiControllers
         public async Task<ActionResult> Data([FromBody]ForecastDataRequest request)
         {
             var dataService = new ForecastDataService();
+            var meteoData = await dataService.Get(request.Time, request.Point, request.Interval);
 
-            var data = await dataService.Get(request.Time, request.Point, request.Interval);
+            var result = new JsonResult { JsonRequestBehavior = JsonRequestBehavior.AllowGet };
 
-            return new JsonResult { Data = data, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+            if (meteoData == null || !meteoData.Any())
+            {
+                return result;
+            }
+
+            var commonPointData = meteoData.First();
+
+            result.Data = new
+            {
+                Elevations = commonPointData.MeteoData.Select(meteo => meteo.Altitude),
+                GeoPoint = commonPointData.GeoPoint,
+                GridData = meteoData
+            };
+
+            return result;
         }
     }
 }

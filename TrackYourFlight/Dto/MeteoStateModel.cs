@@ -7,7 +7,7 @@ namespace TrackYourFlight.Dto
     {
         public string ForecastModel { get; set; }
 
-        public CoordinatePoint Coordinates { get; internal set; }
+        public CoordinatePoint GeoPoint { get; internal set; }
 
         public DateTime DateTime { get; set; }
 

@@ -1,9 +1,49 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Meteo</h2>
+<h2>Forecast for </h2><div data-bind="text: GeoPoint.Name"></div>
 
-<div id="meteoTable" class="col-md-12"></div>
+<div class="container container-fluid">
+    <div class="col-md-12">
+        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
+            Select Elevation
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" data-bind="foreach: Elevations, value: SelectedElevation">
+            <li data-bind="id: index, text: elevation"></li>
+        </ul>
+    </div>
+    
+    <table id="meteoGrid" class="col-md-12">
+        <thead>
+        <tr>
+            <td>Day</td>
+            <td>Time</td>
+            <td>Wind</td>
+            <td>Wind Gusts</td>
+            <td>Humidity</td>
+            <td>CloudCover</td>
+            <td>Precipitation</td>
+            <td>Pressure</td>
+            <td>Boundary Layer Alt</td>
+        </tr>
+        </thead>
+        <tbody data-bind="foreach: ForecastDays">
+        <tr data-bind="foreach: $parent.Data">
+            <td data-bind="text: $parent.Day"></td>
+            <td data-bind="template: {name: DayForecast-Template, data:  $parent.DayData}"></td>
+        </tr>
+        </tbody>
+    </table>
+</div>
+
+<script type="text/html" id="DayForecast-Template">
+    <table data-bind="foreach: Data">
+        <thead></thead>
+        <tbody>
+            <tr data-bind="foreash: Data.Columns"></tr>
+        </tbody>
+    </table>
+</script>

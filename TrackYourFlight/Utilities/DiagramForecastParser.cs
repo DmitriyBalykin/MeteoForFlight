@@ -23,7 +23,7 @@ namespace TrackYourFlight.Utilities
 
             var hoursData = GetDataPerHour(input);
 
-            var coordinates = GetCoordinates(hoursData.First());
+            var geoPoint = GetGeoPoint(hoursData.First());
             var model = GetModel(hoursData.First());
             
             foreach (var hourData in hoursData)
@@ -32,7 +32,7 @@ namespace TrackYourFlight.Utilities
 
                 result.Add(new MeteoStateModel
                 {
-                    Coordinates = coordinates,
+                    GeoPoint = geoPoint,
                     ForecastModel = model,
                     DateTime = GetForecastTime(hourData),
                     MeteoData = GetForecastGridData(hourData),
@@ -113,7 +113,7 @@ namespace TrackYourFlight.Utilities
             return cape;
         }
 
-        private static CoordinatePoint GetCoordinates(IEnumerable<string> hoursData)
+        private static CoordinatePoint GetGeoPoint(IEnumerable<string> hoursData)
         {
             var coordinatesString = hoursData.First().Split(' ').Last().Trim().Trim(':');
             var coordinates = coordinatesString.Split(',');

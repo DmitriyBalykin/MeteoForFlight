@@ -37,7 +37,7 @@ namespace TrackYourFlight.Tests.Utilities
             var firstHourData = result.First();
 
             Assert.AreEqual(firstHourData.ForecastModel, "GFS");
-            Assert.AreEqual(firstHourData.Coordinates, new CoordinatePoint { Latitude = 50.5, Longitude = 30.5});
+            Assert.AreEqual(firstHourData.GeoPoint, new CoordinatePoint { Latitude = 50.5, Longitude = 30.5});
             Assert.AreEqual(firstHourData.DateTime, new DateTime(2017, 6, 1, 6, 0, 0));
             Assert.AreEqual(firstHourData.Cape, 69);
             Assert.AreEqual(firstHourData.CIN, -1);

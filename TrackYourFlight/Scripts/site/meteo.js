@@ -15,6 +15,24 @@
         Interval: interval
     };
 
+    $.post('api/Meteo/Data', requestData).done(DataLoadedHandler);
+});
+
+var DataLoadedHandler = function (response) {
+    forecastData = response.Data;
+
+    var elevationsObservable = ko.observable(
+        forecastData.Elevations.map(function (value, index) {
+            return {index:index, elevation:value}
+        }));
+
+    var viewModel = {
+        Elevations: elevationsObservable,
+        SelectedElevation: elevationsObservable[0],
+        GeoPoint: forecastData.GeoPoint,
+        ForecastDays: forecastData.GridData
+    };
+
     $.post('api/Meteo/Data', requestData).done(OnDataLoaded);
 });
 

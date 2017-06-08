@@ -213,8 +213,12 @@
     <Compile Include="Dto\MeteoStateModel.cs" />
     <Compile Include="Dto\Requests\ForecastDataRequest.cs" />
     <Compile Include="Interfaces\IForecastDataService.cs" />
-    <Compile Include="Migrations\201706071523179_ForecastDataContext.cs" />
-    <Compile Include="Migrations\201706071523179_ForecastDataContext.Designer.cs">
+    <Compile Include="Items\201706081032489_ForecastDataContext1.cs" />
+    <Compile Include="Items\201706081032489_ForecastDataContext1.Designer.cs">
+      <DependentUpon>201706081032489_ForecastDataContext1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Items\201706071523179_ForecastDataContext.cs" />
+    <Compile Include="Items\201706071523179_ForecastDataContext.Designer.cs">
       <DependentUpon>201706071523179_ForecastDataContext.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\ForecastModel.cs" />
@@ -323,7 +327,10 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201706071523179_ForecastDataContext.resx">
+    <EmbeddedResource Include="Items\201706081032489_ForecastDataContext1.resx">
+      <DependentUpon>201706081032489_ForecastDataContext1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Items\201706071523179_ForecastDataContext.resx">
       <DependentUpon>201706071523179_ForecastDataContext.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>

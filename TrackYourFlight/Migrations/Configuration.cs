@@ -9,7 +9,9 @@ namespace TrackYourFlight.Migrations
     {
         public Configuration()
         {
-            AutomaticMigrationsEnabled = false;
+            AutomaticMigrationsEnabled = true;
+            AutomaticMigrationDataLossAllowed = false;
+            MigrationsDirectory = "Items";
         }
 
         protected override void Seed(TrackYourFlight.DataContext.ForecastDataContext context)

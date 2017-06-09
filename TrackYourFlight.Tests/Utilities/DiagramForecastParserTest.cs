@@ -28,25 +28,34 @@ namespace TrackYourFlight.Tests.Utilities
         [TestMethod]
         public void ValueInput_CorrectOutput_Test()
         {
-            var result = DiagramForecastParser.Parse(ReturnValue6hours);
+            var forecastDataModel = DiagramForecastParser.Parse(ReturnValue6hours);
 
-            Assert.IsNotNull(result);
+            Assert.IsNotNull(forecastDataModel);
 
-            Assert.AreEqual(result.Count, 2);
+            Assert.AreEqual(forecastDataModel.DaysMeteoData.Count, 1);
+            Assert.AreEqual(forecastDataModel.DaysMeteoData.First().MeteoForecasts.Count(), 2);
+            Assert.AreEqual(forecastDataModel.Model, "GFS");
+            Assert.AreEqual(forecastDataModel.GeoPoint, new CoordinatePoint { Latitude = 50.5, Longitude = 30.5 });
 
-            var firstHourData = result.First();
+            Assert.AreEqual(forecastDataModel.Elevations.Count(), 31);
 
-            Assert.AreEqual(firstHourData.ForecastModel, "GFS");
-            Assert.AreEqual(firstHourData.GeoPoint, new CoordinatePoint { Latitude = 50.5, Longitude = 30.5});
-            Assert.AreEqual(firstHourData.DateTime, new DateTime(2017, 6, 1, 6, 0, 0));
-            Assert.AreEqual(firstHourData.Cape, 69);
-            Assert.AreEqual(firstHourData.CIN, -1);
-            Assert.AreEqual(firstHourData.Helic, 99999);
-            Assert.AreEqual(firstHourData.PW, 18);
+            var elevations = new []{27.1272, 92.964, 160.02, 228.2952, 298.0944, 441.6552, 592.2264, 750.7224, 919.8864, 1100.328, 1293.5712, 1499.9208, 1721.2056, 1960.7784, 2221.0776, 2507.5896, 2827.3248, 3190.9512, 3622.548, 4180.0272, 4968.24, 5661.66, 6320.028, 7321.9056, 8125.3584, 9542.9832, 10298.2776, 11029.7976, 12180.4176, 13123.4688, 14758.7208 };
 
-            Assert.AreEqual(firstHourData.MeteoData.Count(), 31);
+            Assert.IsTrue(elevations
+                .Zip(forecastDataModel.Elevations, (elev1, elev2) => new Tuple<double, double>(elev1, elev2))
+                .All(tuple => tuple.Item1 == tuple.Item2));
 
-            var firstGridLine = firstHourData.MeteoData.First();
+            var firstForecastData = forecastDataModel.DaysMeteoData.First().MeteoForecasts.First();
+
+            Assert.AreEqual(firstForecastData.Time, new DateTime(2017, 6, 1, 6, 0, 0));
+            Assert.AreEqual(firstForecastData.Cape, 69);
+            Assert.AreEqual(firstForecastData.CIN, -1);
+            Assert.AreEqual(firstForecastData.Helic, 99999);
+            Assert.AreEqual(firstForecastData.PW, 18);
+
+            Assert.AreEqual(firstForecastData.AllElevationsMeteoData.Count(), 31);
+
+            var firstGridLine = firstForecastData.AllElevationsMeteoData.First();
 
             Assert.AreEqual(firstGridLine.Altitude, 27.1272);
             Assert.AreEqual(firstGridLine.Pressure, 10000);
@@ -55,7 +64,7 @@ namespace TrackYourFlight.Tests.Utilities
             Assert.AreEqual(firstGridLine.WindDirection, 276);
             Assert.AreEqual(firstGridLine.WindSpeed, 6.6878);
 
-            var lastGridLine = firstHourData.MeteoData.Last();
+            var lastGridLine = firstForecastData.AllElevationsMeteoData.Last();
 
             Assert.AreEqual(lastGridLine.Altitude, 14758.7208);
             Assert.AreEqual(lastGridLine.Pressure, 10);

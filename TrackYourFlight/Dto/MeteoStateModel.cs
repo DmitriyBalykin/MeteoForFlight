@@ -5,13 +5,9 @@ namespace TrackYourFlight.Dto
 {
     public class MeteoStateModel
     {
-        public string ForecastModel { get; set; }
+        public DateTime Time { get; set; }
 
-        public CoordinatePoint GeoPoint { get; internal set; }
-
-        public DateTime DateTime { get; set; }
-
-        public IEnumerable<MeteoLayerModel> MeteoData { get; set; }
+        public IEnumerable<MeteoLayerModel> AllElevationsMeteoData { get; set; }
 
         public int Cape { get; set; }
 

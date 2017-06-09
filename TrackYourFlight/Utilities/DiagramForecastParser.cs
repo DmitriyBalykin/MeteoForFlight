@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using TrackYourFlight.Dto;
+using TrackYourFlight.Models;
 
 namespace TrackYourFlight.Utilities
 {
@@ -12,36 +13,65 @@ namespace TrackYourFlight.Utilities
         private const double KnotLength = 0.514444;
         private const int Precision = 4;
 
-        public static List<MeteoStateModel> Parse(string input)
+        public static ForecastDataModel Parse(string input)
         {
             if (string.IsNullOrEmpty(input))
             {
                 return null;
             }
 
-            var result = new List<MeteoStateModel>();
+            var timeStopsData = GetDataPerHour(input);
 
-            var hoursData = GetDataPerHour(input);
-
-            var geoPoint = GetGeoPoint(hoursData.First());
-            var model = GetModel(hoursData.First());
-            
-            foreach (var hourData in hoursData)
+            var daysData = timeStopsData.GroupBy(lines =>
             {
-                var parameters = GetForecastColumnHeaders(hoursData.First());
+                var time = GetForecastTime(lines);
 
-                result.Add(new MeteoStateModel
+                return new DateTime(time.Year, time.Month, time.Day);
+            });
+
+            var daysMeteoData = new List<DayMeteoData>();
+
+            foreach (var dayData in daysData)
+            {
+
+                var perHourForecasts = new List<MeteoStateModel>();
+
+                foreach (var hourData in dayData)
                 {
-                    GeoPoint = geoPoint,
-                    ForecastModel = model,
-                    DateTime = GetForecastTime(hourData),
-                    MeteoData = GetForecastGridData(hourData),
-                    Cape = GetParameter(parameters, 1),
-                    CIN = GetParameter(parameters, 3),
-                    Helic = GetParameter(parameters, 5),
-                    PW = GetParameter(parameters, 7)
+                    var parameters = GetForecastColumnHeaders(hourData);
+
+                    perHourForecasts.Add(new MeteoStateModel
+                    {
+                        Time = GetForecastTime(hourData),
+                        AllElevationsMeteoData = GetForecastGridData(hourData),
+                        Cape = GetParameter(parameters, 1),
+                        CIN = GetParameter(parameters, 3),
+                        Helic = GetParameter(parameters, 5),
+                        PW = GetParameter(parameters, 7)
+                    });
+                }
+
+                daysMeteoData.Add(new DayMeteoData
+                {
+                    Date = dayData.Key,
+                    MeteoForecasts = perHourForecasts
                 });
             }
+
+            var elevations = daysMeteoData
+                .First()
+                .MeteoForecasts
+                .First()
+                .AllElevationsMeteoData
+                .Select(data => data.Altitude);
+
+            var result = new ForecastDataModel
+            {
+                GeoPoint = GetGeoPoint(timeStopsData.First()),
+                Model = GetModel(timeStopsData.First()),
+                Elevations = elevations,
+                DaysMeteoData = daysMeteoData
+            };
 
             return result;
         }

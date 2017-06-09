@@ -3,16 +3,20 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Forecast for </h2><div data-bind="text: GeoPoint.Name"></div>
+<h2 data-bind="text: 'Forecast for ' + GeoPoint.Name+', '+GeoPoint.Country"></h2>
 
 <div class="container container-fluid">
     <div class="col-md-12">
-        <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown">
-            Select Elevation
+        <button type="button" class="dropdown-toggle" data-toggle="dropdown">
+            <span data-bind="text: SelectedElevation().elevation"></span>
             <span class="caret"></span>
         </button>
-        <ul class="dropdown-menu" data-bind="foreach: Elevations, value: SelectedElevation">
-            <li data-bind="id: index, text: elevation"></li>
+        <ul class="dropdown-menu" role="menu" data-bind="foreach: Elevations">
+            <li>
+                <a href="javscript:void(0);" data-bind="click: $parent.OnElevationSelected">
+                    <span data-bind="text: elevation"></span>
+                </a>
+            </li>
         </ul>
     </div>
     

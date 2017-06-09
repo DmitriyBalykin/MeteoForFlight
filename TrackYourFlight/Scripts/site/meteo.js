@@ -21,16 +21,25 @@
 var DataLoadedHandler = function (response) {
     forecastData = response.Data;
 
-    var elevationsObservable = ko.observable(
-        forecastData.Elevations.map(function (value, index) {
-            return {index:index, elevation:value}
-        }));
+    elevations = forecastData.Elevations.map(function (value, index) {
+            return { index: index, elevation: value };
+    });
+
+    var SelectedElevation = ko.observable(elevations[0]);
 
     var viewModel = {
-        Elevations: elevationsObservable,
-        SelectedElevation: elevationsObservable[0],
+        Elevations: elevations,
+        SelectedElevation: SelectedElevation,
         GeoPoint: forecastData.GeoPoint,
-        ForecastDays: forecastData.GridData
+        ForecastDays: forecastData.GridData,
+        OnElevationSelected: function (data, event) {
+            event.stopPropagation();
+
+            SelectedElevation(data);
+            ShowForecastTable(data);
+
+            return true;
+        }
     };
 
     $.post('api/Meteo/Data', requestData).done(DataLoadedHandler);

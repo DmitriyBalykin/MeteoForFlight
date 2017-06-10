@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using TrackYourFlight.Dto;
 using TrackYourFlight.Models;
@@ -148,8 +149,8 @@ namespace TrackYourFlight.Utilities
             var coordinatesString = hoursData.First().Split(' ').Last().Trim().Trim(':');
             var coordinates = coordinatesString.Split(',');
 
-            var latitude = double.Parse(coordinates.GetValue(0).ToString().Trim());
-            var longitude = double.Parse(coordinates.GetValue(1).ToString().Trim());
+            var latitude = GetDouble(coordinates.GetValue(0));
+            var longitude = GetDouble(coordinates.GetValue(1));
 
             return new CoordinatePoint
             {
@@ -168,7 +169,7 @@ namespace TrackYourFlight.Utilities
 
         private static double GetDouble(object v)
         {
-            var value = Math.Round(double.Parse(v.ToString().Trim()), Precision);
+            var value = Math.Round(double.Parse(v.ToString().Trim(), CultureInfo.InvariantCulture), Precision);
 
             return value;
         }

@@ -19,35 +19,10 @@
             </li>
         </ul>
     </div>
-    
-    <table id="meteoGrid" class="col-md-12">
-        <thead>
-        <tr>
-            <td>Day</td>
-            <td>Time</td>
-            <td>Wind</td>
-            <td>Wind Gusts</td>
-            <td>Humidity</td>
-            <td>CloudCover</td>
-            <td>Precipitation</td>
-            <td>Pressure</td>
-            <td>Boundary Layer Alt</td>
-        </tr>
-        </thead>
-        <tbody data-bind="foreach: ForecastDays">
-        <tr data-bind="foreach: $parent.Data">
-            <td data-bind="text: $parent.Day"></td>
-            <td data-bind="template: {name: DayForecast-Template, data:  $parent.DayData}"></td>
-        </tr>
-        </tbody>
-    </table>
+
+    <div data-bind="simpleGrid: ForecastGridViewModel"></div>
 </div>
 
-<script type="text/html" id="DayForecast-Template">
-    <table data-bind="foreach: Data">
-        <thead></thead>
-        <tbody>
-            <tr data-bind="foreash: Data.Columns"></tr>
-        </tbody>
-    </table>
-</script>
+<div id="DayForecast-Template">
+    <div data-bind="simpleGrid: DayGridViewModel"></div>
+</div>

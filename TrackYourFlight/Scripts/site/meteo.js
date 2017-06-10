@@ -15,32 +15,37 @@
         Interval: interval
     };
 
-    $.post('api/Meteo/Data', requestData).done(DataLoadedHandler);
+    $.post('api/Meteo/Data', requestData).done(OnDataLoaded);
 });
 
-var DataLoadedHandler = function (response) {
-    forecastData = response.Data;
+var OnDataLoaded = function (response) {
 
-    elevations = forecastData.Elevations.map(function (value, index) {
+    var pageContext = this;
+
+    this.forecastData = response.Data;
+    this.elevations = this.forecastData.Elevations.map(function (value, index) {
             return { index: index, elevation: value };
     });
 
-    var SelectedElevation = ko.observable(elevations[0]);
+    this.GetForecastData = function (elevation) {
 
-    var viewModel = {
-        Elevations: elevations,
-        SelectedElevation: SelectedElevation,
-        GeoPoint: forecastData.GeoPoint,
-        ForecastDays: forecastData.GridData,
-        OnElevationSelected: function (data, event) {
-            event.stopPropagation();
-
-            SelectedElevation(data);
-            ShowForecastTable(data);
-
-            return true;
+        if (elevation == null) {
+            elevation = this.elevations[0];
         }
-    };
+
+        var elevationForecastData = this.forecastData.DaysMeteoData.map(function (item) {
+
+            var meteoData = item.MeteoForecasts.map(function (dayData) {
+
+                return {
+                    Time: dayData.Time,
+                    CIN: dayData.CIN,
+                    Cape: dayData.Cape,
+                    Helic: dayData.Helic,
+                    PW: dayData.PW,
+                    ElevationForecast: dayData.AllElevationsMeteoData[elevation.index]
+                };
+            });
 
     $.post('api/Meteo/Data', requestData).done(DataLoadedHandler);
 });

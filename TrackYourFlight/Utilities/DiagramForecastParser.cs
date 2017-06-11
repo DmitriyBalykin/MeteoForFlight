@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using TrackYourFlight.Dto;
+using TrackYourFlight.Models;
 
 namespace TrackYourFlight.Utilities
 {
@@ -12,36 +14,65 @@ namespace TrackYourFlight.Utilities
         private const double KnotLength = 0.514444;
         private const int Precision = 4;
 
-        public static List<MeteoStateModel> Parse(string input)
+        public static ForecastDataModel Parse(string input)
         {
             if (string.IsNullOrEmpty(input))
             {
                 return null;
             }
 
-            var result = new List<MeteoStateModel>();
+            var timeStopsData = GetDataPerHour(input);
 
-            var hoursData = GetDataPerHour(input);
-
-            var coordinates = GetCoordinates(hoursData.First());
-            var model = GetModel(hoursData.First());
-            
-            foreach (var hourData in hoursData)
+            var daysData = timeStopsData.GroupBy(lines =>
             {
-                var parameters = GetForecastColumnHeaders(hoursData.First());
+                var time = GetForecastTime(lines);
 
-                result.Add(new MeteoStateModel
+                return new DateTime(time.Year, time.Month, time.Day);
+            });
+
+            var daysMeteoData = new List<DayMeteoData>();
+
+            foreach (var dayData in daysData)
+            {
+
+                var perHourForecasts = new List<MeteoStateModel>();
+
+                foreach (var hourData in dayData)
                 {
-                    Coordinates = coordinates,
-                    ForecastModel = model,
-                    DateTime = GetForecastTime(hourData),
-                    MeteoData = GetForecastGridData(hourData),
-                    Cape = GetParameter(parameters, 1),
-                    CIN = GetParameter(parameters, 3),
-                    Helic = GetParameter(parameters, 5),
-                    PW = GetParameter(parameters, 7)
+                    var parameters = GetForecastColumnHeaders(hourData);
+
+                    perHourForecasts.Add(new MeteoStateModel
+                    {
+                        Time = GetForecastTime(hourData),
+                        AllElevationsMeteoData = GetForecastGridData(hourData),
+                        Cape = GetParameter(parameters, 1),
+                        CIN = GetParameter(parameters, 3),
+                        Helic = GetParameter(parameters, 5),
+                        PW = GetParameter(parameters, 7)
+                    });
+                }
+
+                daysMeteoData.Add(new DayMeteoData
+                {
+                    Date = dayData.Key,
+                    MeteoForecasts = perHourForecasts
                 });
             }
+
+            var elevations = daysMeteoData
+                .First()
+                .MeteoForecasts
+                .First()
+                .AllElevationsMeteoData
+                .Select(data => data.Altitude);
+
+            var result = new ForecastDataModel
+            {
+                GeoPoint = GetGeoPoint(timeStopsData.First()),
+                Model = GetModel(timeStopsData.First()),
+                Elevations = elevations,
+                DaysMeteoData = daysMeteoData
+            };
 
             return result;
         }
@@ -113,13 +144,13 @@ namespace TrackYourFlight.Utilities
             return cape;
         }
 
-        private static CoordinatePoint GetCoordinates(IEnumerable<string> hoursData)
+        private static CoordinatePoint GetGeoPoint(IEnumerable<string> hoursData)
         {
             var coordinatesString = hoursData.First().Split(' ').Last().Trim().Trim(':');
             var coordinates = coordinatesString.Split(',');
 
-            var latitude = double.Parse(coordinates.GetValue(0).ToString().Trim());
-            var longitude = double.Parse(coordinates.GetValue(1).ToString().Trim());
+            var latitude = GetDouble(coordinates.GetValue(0));
+            var longitude = GetDouble(coordinates.GetValue(1));
 
             return new CoordinatePoint
             {
@@ -138,7 +169,7 @@ namespace TrackYourFlight.Utilities
 
         private static double GetDouble(object v)
         {
-            var value = Math.Round(double.Parse(v.ToString().Trim()), Precision);
+            var value = Math.Round(double.Parse(v.ToString().Trim(), CultureInfo.InvariantCulture), Precision);
 
             return value;
         }

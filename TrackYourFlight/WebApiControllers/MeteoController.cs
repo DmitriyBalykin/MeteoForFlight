@@ -13,10 +13,13 @@ namespace TrackYourFlight.WebApiControllers
         public async Task<ActionResult> Data([FromBody]ForecastDataRequest request)
         {
             var dataService = new ForecastDataService();
+            var meteoData = await dataService.Get(request.Time, request.Point, request.Interval);
 
-            var data = await dataService.Get(request.Time, request.Point, request.Interval);
-
-            return new JsonResult { Data = data, JsonRequestBehavior = JsonRequestBehavior.AllowGet };
+            return new JsonResult
+            {
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet,
+                Data = meteoData
+            };
         }
     }
 }

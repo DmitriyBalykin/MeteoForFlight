@@ -21,7 +21,7 @@ namespace TrackYourFlight.Models
 
         [Required]
         [DisplayName("Point")]
-        public CoordinatePoint Point { get; set; }
+        public virtual CoordinatePoint Point { get; set; }
 
         [DisplayName("ForecastTime")]
         public DateTime Time { get; set; }

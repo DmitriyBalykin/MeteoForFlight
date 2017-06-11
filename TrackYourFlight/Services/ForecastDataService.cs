@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -16,7 +14,7 @@ namespace TrackYourFlight.Services
     {
         private const string BaseUrl = "https://rucsoundings.noaa.gov/get_soundings.cgi?data_source=GFS&latest=latest";
 
-        public async Task<List<MeteoStateModel>> Get(DateTime time, CoordinatePoint point, int hoursInterval)
+        public async Task<ForecastDataModel> Get(DateTime time, CoordinatePoint point, int hoursInterval)
         {
             try
             {
@@ -24,20 +22,15 @@ namespace TrackYourFlight.Services
 
                 var id = ForecastModel.GenerateId(point, time);
 
-                var forecastData = dataContext.Forecast.Where(forecast => forecast.Id.Equals(id, StringComparison.InvariantCulture));
-                string resultString;
+                var forecastData = await dataContext.Forecast.FindAsync(id);
 
-                if (await forecastData.AnyAsync())
-                {
-                    resultString = (await forecastData.SingleAsync()).Value;
-                }
-                else
+                if (forecastData == null)
                 {
                     var httpClient = new HttpClient();
                     var uri = GetGfsDataUrl(time, point, hoursInterval);
-                    resultString = await httpClient.GetStringAsync(uri);
+                    var resultString = await httpClient.GetStringAsync(uri);
 
-                    var forecastModel = new ForecastModel
+                    var newForecastData = new ForecastModel
                     {
                         Id = id,
                         LoadTime = DateTime.UtcNow,
@@ -46,11 +39,17 @@ namespace TrackYourFlight.Services
                         Value = resultString
                     };
 
-                    dataContext.Forecast.Add(forecastModel);
+                    dataContext.Forecast.Add(newForecastData);
                     await dataContext.SaveChangesAsync();
+
+                    forecastData = await dataContext.Forecast.FindAsync(id);
                 }
 
-                return DiagramForecastParser.Parse(resultString);
+                var resultModel = DiagramForecastParser.Parse(forecastData.Value);
+
+                resultModel.GeoPoint = forecastData.Point;
+
+                return resultModel;
             }
             catch (Exception ex)
             {

@@ -209,6 +209,7 @@
     <Compile Include="DataContext\BaseDataContext.cs" />
     <Compile Include="DataContext\ForecastDataContext.cs" />
     <Compile Include="Dto\CoordinatePoint.cs" />
+    <Compile Include="Dto\DayMeteoData.cs" />
     <Compile Include="Dto\MeteoLayerDataModel.cs" />
     <Compile Include="Dto\MeteoStateModel.cs" />
     <Compile Include="Dto\Requests\ForecastDataRequest.cs" />
@@ -222,6 +223,7 @@
       <DependentUpon>201706071523179_ForecastDataContext.cs</DependentUpon>
     </Compile>
     <Compile Include="Models\ForecastModel.cs" />
+    <Compile Include="Models\ForecastDataModel.cs" />
     <Compile Include="Services\ForecastDataService.cs" />
     <Compile Include="Utilities\DateTimeParser.cs" />
     <Compile Include="Utilities\DiagramForecastParser.cs" />
@@ -267,6 +269,9 @@
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
+    <Content Include="Scripts\knockout-3.4.2.debug.js" />
+    <Content Include="Scripts\knockout-3.4.2.js" />
+    <Content Include="Scripts\libs\knockout.simpleGrid.1.3.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.matchmedia.addListener.js" />
@@ -333,6 +338,12 @@
     <EmbeddedResource Include="Items\201706071523179_ForecastDataContext.resx">
       <DependentUpon>201706071523179_ForecastDataContext.cs</DependentUpon>
     </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Common\Common.csproj">
+      <Project>{ec420525-1eb5-4f7e-bb89-1f2119101b03}</Project>
+      <Name>Common</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

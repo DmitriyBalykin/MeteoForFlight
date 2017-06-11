@@ -1,9 +1,28 @@
-﻿
-@{
+﻿@{
     ViewBag.Title = "Index";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Meteo</h2>
+<h2 data-bind="text: 'Forecast for ' + GeoPoint.Name+', '+GeoPoint.Country"></h2>
 
-<div id="meteoTable" class="col-md-12"></div>
+<div class="container container-fluid">
+    <div class="col-md-12">
+        <button type="button" class="dropdown-toggle" data-toggle="dropdown">
+            <span data-bind="text: SelectedElevation().elevation"></span>
+            <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu" role="menu" data-bind="foreach: Elevations">
+            <li>
+                <a href="javscript:void(0);" data-bind="click: $parent.OnElevationSelected">
+                    <span data-bind="text: elevation"></span>
+                </a>
+            </li>
+        </ul>
+    </div>
+
+    <div data-bind="simpleGrid: ForecastGridViewModel"></div>
+</div>
+
+<div id="DayForecast-Template">
+    <div data-bind="simpleGrid: DayGridViewModel"></div>
+</div>

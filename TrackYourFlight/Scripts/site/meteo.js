@@ -1,6 +1,7 @@
 ﻿$(document).ready(function () {
 
-    var time = Date();
+    var time = new Date().toISOString();
+
     var interval = 120;
 
     var point = {
@@ -63,16 +64,28 @@ var OnDataLoaded = function (response) {
         this.SelectedElevation = pageContext.SelectedElevation;
         this.GeoPoint = pageContext.forecastData.GeoPoint;
 
-        var data = pageContext.GetForecastData(data);
+        var data = pageContext
+            .GetForecastData()
+            .map(function (dayItem) {
+                return {
+                    Day: new Date(dayItem.Date).toDateString(),
+                    DayGridViewModel: new ko.simpleGrid.viewModel({
+                        data: dayItem.MeteoForecasts,
+                        columns: [
+                            { headerText: "Time", rowText: function (item) { return new Date(item.Time).toLocaleTimeString(); } },
+                            { headerText: "Wind Direction", rowText: function (item) { return item.ElevationForecast.WindDirection; } },
+                            { headerText: "Wind Speed", rowText: function (item) { return item.ElevationForecast.WindSpeed; } },
+                            { headerText: "Temperature", rowText: function (item) { return item.ElevationForecast.Temperature; } },
+                            { headerText: "Dew Point", rowText: function (item) { return item.ElevationForecast.DewPoint; } },
+                            { headerText: "Pressure", rowText: function (item) { return item.ElevationForecast.Pressure; } }
+                        ]
+                    })
+                };
+            });
+
         pageContext.ForecastGridData = ko.observableArray(data);
 
-        this.ForecastGridViewModel = new ko.simpleGrid.viewModel({
-            data: pageContext.ForecastGridData,
-            columns: [
-                { headerText: "Day", rowText: "Date" },
-                { headerText: "", rowText: function (item) { return RenderTemplate(item, "DayForecast-Template"); } }
-            ]
-        });
+        this.ForecastListViewModel = pageContext.ForecastGridData();
 
         this.OnElevationSelected = function (elevation, event) {
             event.stopPropagation();
@@ -95,7 +108,9 @@ var OnDataLoaded = function (response) {
 
 function RenderTemplate(data, templateName)
 {
-    var node = $('#' + templateName)[0];
+    var template = $('#' + templateName)[0].innerHTML;
+    var node = document.createElement('div');
+    node.innerHTML = template;
     ko.cleanNode(node);
 
     var ViewModel = function () {
@@ -129,4 +144,6 @@ function RenderTemplate(data, templateName)
     };
 
     ko.applyBindings(new ViewModel(), node);
+
+    return node.innerHTML;
 }

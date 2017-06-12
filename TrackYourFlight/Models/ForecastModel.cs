@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Globalization;
 using TrackYourFlight.Dto;
 
 namespace TrackYourFlight.Models
@@ -31,7 +30,7 @@ namespace TrackYourFlight.Models
 
         public static string GenerateId(CoordinatePoint point, DateTime time)
         {
-            return time.ToString(CultureInfo.InvariantCulture) + "_" + point;
+            return $"{time:yyyy MMMM dd}_{point}";
         }
     }
 }

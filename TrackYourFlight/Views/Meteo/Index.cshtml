@@ -20,9 +20,20 @@
         </ul>
     </div>
 
-    <div data-bind="simpleGrid: ForecastGridViewModel"></div>
-</div>
-
-<div id="DayForecast-Template">
-    <div data-bind="simpleGrid: DayGridViewModel"></div>
+    <div>
+        <table>
+            <tbody data-bind="foreach: ForecastListViewModel">
+                <tr class="row">
+                    <td>
+                        <div data-bind="text: Day"></div>
+                    </td>
+                    <td>
+                        <div class="col-md-10">
+                            <div data-bind="simpleGrid: DayGridViewModel"></div>
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
 </div>

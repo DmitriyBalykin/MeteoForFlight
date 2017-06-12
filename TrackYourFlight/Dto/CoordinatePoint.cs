@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Globalization;
 
 namespace TrackYourFlight.Dto
 {
@@ -37,6 +38,11 @@ namespace TrackYourFlight.Dto
 
                 return hash;
             }
+        }
+
+        public override string ToString()
+        {
+            return Latitude.ToString(CultureInfo.InvariantCulture) + "_" + Longitude.ToString(CultureInfo.InvariantCulture);
         }
     }
 }

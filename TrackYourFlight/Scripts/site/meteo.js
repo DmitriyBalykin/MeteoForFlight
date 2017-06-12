@@ -1,6 +1,7 @@
 ﻿$(document).ready(function () {
 
     var time = new Date().toISOString();
+
     var interval = 120;
 
     var point = {

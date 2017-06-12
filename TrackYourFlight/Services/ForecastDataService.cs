@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Linq;
+using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
 using TrackYourFlight.DataContext;
@@ -39,7 +39,18 @@ namespace TrackYourFlight.Services
                         Value = resultString
                     };
 
-                    dataContext.Forecast.Add(newForecastData);
+                    dataContext.Forecast.Add(newForecastData); // AddOrUpdate
+                    await dataContext.SaveChangesAsync();
+                    forecastData = await dataContext.Forecast.FindAsync(id);
+                }
+                else if (string.IsNullOrEmpty(forecastData.Value))
+                {
+                    var httpClient = new HttpClient();
+                    var uri = GetGfsDataUrl(time, point, hoursInterval);
+                    forecastData.Value = await httpClient.GetStringAsync(uri);
+
+                    //Consider case when incorrect unparseble data was received
+
                     await dataContext.SaveChangesAsync();
 
                     forecastData = await dataContext.Forecast.FindAsync(id);
@@ -67,7 +78,7 @@ namespace TrackYourFlight.Services
                 "&start_min=" + time.Minute +
                 "&n_hrs=" + hoursInterval +
                 "&fcst_len=shortest" +
-                "&airport=" + point.Latitude + "%2C" + point.Longitude +
+                "&airport=" + point.Latitude.ToString(CultureInfo.InvariantCulture) + "%2C" + point.Longitude.ToString(CultureInfo.InvariantCulture) +
                 "&text=Ascii%20text%20%28GSD%20format%29&hydrometeors=false&start=latest";
 
             return new Uri(url);

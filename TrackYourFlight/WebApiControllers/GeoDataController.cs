@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using System.Web.Http;
 using System.Web.Mvc;
 using TrackYourFlight.DataContext;
+using TrackYourFlight.Dto;
 using TrackYourFlight.Services;
 
 namespace TrackYourFlight.WebApiControllers
@@ -37,46 +38,58 @@ namespace TrackYourFlight.WebApiControllers
 
         [System.Web.Http.HttpGet]
         [System.Web.Http.AllowAnonymous]
-        public JsonResult GeoPoints(string country)
+        public JsonResult GeoPoints(string countryName)
         {
-            var dataContext = new GeoPointsDataContext();
-            var pointsList = dataContext.GeoPoints.Where(point => point.Country.Equals(country)).ToList();
-
-            return new JsonResult
+            using (var dataContext = new GeoPointsDataContext())
             {
-                JsonRequestBehavior = JsonRequestBehavior.AllowGet,
-                Data = pointsList
-            };
+                var pointsList = dataContext.GeoPoints.Where(point => point.Country.Equals(countryName)).ToList();
+
+                return new JsonResult
+                {
+                    JsonRequestBehavior = JsonRequestBehavior.AllowGet,
+                    Data = pointsList
+                };
+            }
         }
 
         // POST: Places/Create
         [System.Web.Http.HttpPost]
-        public JsonResult CreatePlace(FormCollection collection)
+        [System.Web.Http.AllowAnonymous]
+        public async Task<JsonResult> CreatePlace([FromBody]CoordinatePoint point)
         {
-            try
+            using (var dataContext = new GeoPointsDataContext())
             {
-                // TODO: Add insert logic here
+                try
+                {
+                    dataContext.GeoPoints.Add(point);
+                    await dataContext.SaveChangesAsync();
+                }
+                catch (Exception ex)
+                {
+                    
+                }
+                
 
-                return null;
-            }
-            catch
-            {
                 return null;
             }
         }
 
         // POST: Places/Edit/5
         [System.Web.Http.HttpPost]
-        public JsonResult EditPlace(int id, FormCollection collection)
+        public async Task<JsonResult> EditPlace([FromBody]CoordinatePoint point)
         {
-            try
+            using (var dataContext = new GeoPointsDataContext())
             {
-                // TODO: Add update logic here
+                var existingPoint = await dataContext.GeoPoints.FindAsync(point.Id);
 
-                return null;
-            }
-            catch
-            {
+                //TODO: use automapper
+                existingPoint.Country = point.Country;
+                existingPoint.Name = point.Name;
+                existingPoint.Latitude = point.Latitude;
+                existingPoint.Longitude = point.Longitude;
+
+                await dataContext.SaveChangesAsync();
+
                 return null;
             }
         }

@@ -1,7 +1,12 @@
 ﻿var Map;
 var VM;
+var Markers = [];
 
 $(document).ready(function () {
+
+    $.ajaxSetup({
+        error: function () { ReportError(true); }
+    });
 
     $.getScript('https://maps.googleapis.com/maps/api/js?key=AIzaSyBEpRZJ45ti62SWlr0GDwB1OWjCHC_5uXI&callback=myMap');
 
@@ -14,72 +19,89 @@ function OnCountriesDataLoaded(result) {
 
         var vmContext = this;
 
-        var areCountriesLoaded = false;
-
         this.Countries = result.Data;
         this.ExistingPlaces = ko.observable([]);
         this.SelectedCountry = ko.observable(result.Data[0]);
         this.IsCreatePlaceSelected = ko.observable(true);
-        this.SelectedPlace = ko.observable("");
+        this.SelectedPlace = ko.observable("---");
 
-        areCountriesLoaded = true;
+        this.OnCountrySelected = function (country, event) {
 
-        this.OnCountrySelected = function (countryName, event) {
+            event.stopPropagation();
 
-            if (!areCountriesLoaded) {
-                return;
-            }
+            vmContext.SelectedCountry(country);
 
-            this.SelectedCountry(countryName);
+            $('#CountryFlag').attr('src', country.Flag);
+
+            MoveMapToPoint(country.LatLng[0], country.LatLng[1]);
 
             var requestData = {
-                country: countryName
+                countryName: country.Name
             };
 
             $.get('api/GeoData/GeoPoints',
                 requestData,
                 function(response) {
                     vmContext.ExistingPlaces(response.Data);
+
+                    ReportError(false);
                 });
         };
 
-        this.OnPlaceSelected = function (data, event) {
-            vmContext.SelectedPlace(data);
+        this.OnPlaceSelected = function (place, event) {
+
+            event.stopPropagation();
+
+            vmContext.SelectedPlace(place);
+
+            MoveMapToPoint(place.Latitude, place.Longitude);
         };
 
-        this.OnPlaceSelectedWithMap = function (data, event) {
+        this.OnPlaceSelectedWithMap = function (place) {
 
             //convert in some way
-            var convertedData = data;
+            var convertedData = {
+                Latitude: place.latLng.lat(),
+                Longitude: place.latLng.lng()
+            };
+
+            $('#PlaceLat').val(convertedData.Latitude);
+            $('#PlaceLong').val(convertedData.Longitude);
 
             vmContext.SelectedPlace(convertedData);
+
+            SetMarkerToPoint(convertedData.Latitude, convertedData.Longitude);
         };
 
         this.SavePlace = function (data, event) {
 
+            event.stopPropagation();
+
             var url = 'api/GeoData/';
 
-            if (this.IsCreatePlaceSelected) {
-                url += 'Create';
+            if (vmContext.IsCreatePlaceSelected()) {
+                url += 'CreatePlace';
             } else {
-                url += 'Edit/' + vmContext.SelectedPlace.Id;
+                url += 'EditPlace/' + vmContext.SelectedPlace.Id;
             }
 
-            var dataToSave = vmContext.SelectedPlace;
+            var dataToSave = vmContext.SelectedPlace();
 
-            $.post(url, dataToSave, OnCountriesDataLoaded);
+            if (dataToSave.Name == null) {
+                dataToSave.Id = 0;
+                dataToSave.Name = $('#NewPlaceName').val();
+                dataToSave.Country = vmContext.SelectedCountry().Name;
+            }
+
+            $.post(url, dataToSave, OnPlaceSaved, 'json');
+        };
+
+        this.OnPlaceSaved = function () {
+            //set place to newly saved
         };
     };
 
     VM = new ViewModel();
-
-    //Map.onclick(VM.OnPlaceSelectedWithMap);
-
-    //var marker = new google.maps.Marker({
-    //    position: myLatlng,
-    //    map: Map,
-    //    title: 'Click to zoom'
-    //});
 
     InitializeMapEvents();
 
@@ -87,19 +109,62 @@ function OnCountriesDataLoaded(result) {
 }
 
 function myMap() {
+
     var mapOptions = {
-        center: new google.maps.LatLng(50.45, 30.5),
-        zoom: 12,
+        zoom: 10,
         mapTypeId: google.maps.MapTypeId.ROADMAP
     }
 
     Map = new google.maps.Map(document.getElementById("map"), mapOptions);
 
     InitializeMapEvents();
+
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+            MoveMapToPoint(position.coords.latitude, position.coords.longitude);
+
+            //$.get('api/GeoData/ClosestCountry', {Latitude: position.coords.latitude, Longitude: position.coords.longitude, function(response){ SetCountry}});
+        });
+    }
 }
 
 function InitializeMapEvents() {
     if (VM != null && Map.data != null) {
         Map.addListener('click', VM.OnPlaceSelectedWithMap);
     }
+}
+
+function MoveMapToPoint(lat, long) {
+    if (Map.data != null) {
+
+        centerLocation = new google.maps.LatLng(lat, long);
+
+        Map.setCenter(centerLocation);
+    }
+}
+
+function SetMarkerToPoint(lat, long) {
+    if (Map.data != null) {
+
+        Markers.forEach(function (marker) { marker.setMap(null) });
+        Markers = [];
+
+        var pointName = $('#NewPlaceName').val();
+
+        if (pointName == null || pointName == '') {
+            pointName = "New point";
+        }
+
+        var marker = new google.maps.Marker({
+            position: new google.maps.LatLng(lat, long),
+            map: Map,
+            title: pointName
+        });
+
+        Markers.push(marker);
+    }
+}
+
+function ReportError(doReport) {
+    $('#ErrorContainer').toggleClass('hidden', doReport);
 }

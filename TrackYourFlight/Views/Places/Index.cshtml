@@ -11,6 +11,7 @@
 
 <div class="container container-fluid">
     <div class="row">
+        <img id="CountryFlag" class="flag"/>
         <div id="CountrySelect" class="col-md-12">
             <button type="button" class="dropdown-toggle" data-toggle="dropdown">
                 <span data-bind="text: SelectedCountry().Name"></span>
@@ -18,7 +19,7 @@
             </button>
             <ul class="dropdown-menu" role="menu" data-bind="foreach: Countries">
                 <li>
-                    <a href="javscript:void(0);" data-bind="click: $parent.OnCountrySelected(Name)">
+                    <a href="javscript:void(0);" data-bind="click: $parent.OnCountrySelected">
                         <span data-bind="text: Name"></span>
                     </a>
                 </li>
@@ -30,12 +31,12 @@
         <div class="col-md-4">
             <div id="PlaceSelect">
                 <button type="button" class="dropdown-toggle" data-toggle="dropdown">
-                    <span data-bind="text: SelectedPlace()"></span>
+                    <span data-bind="text: SelectedPlace().Name"></span>
                     <span class="caret"></span>
                 </button>
                 <ul class="dropdown-menu" role="menu" data-bind="foreach: ExistingPlaces()">
                     <li>
-                        <a href="javscript:void(0);" data-bind="click: $parent.OnPlaceSelected(Name)">
+                        <a href="javscript:void(0);" data-bind="click: $parent.OnPlaceSelected">
                             <span data-bind="text: Name"></span>
                         </a>
                     </li>
@@ -44,12 +45,14 @@
         </div>
 
         <div class="col-md-2" id="PlaceInputSwitch">
-            <input type="checkbox" id="CreateNewPlaceSwitch" data-bind="checked: IsCreatePlaceSelected()">
+            <input type="checkbox" id="CreateNewPlaceSwitch" data-bind="checked: IsCreatePlaceSelected">
             <label for="CreateNewPlaceSwitch">Create new place</label>
         </div>
 
         <div class="col-md-4" id="NewPlace">
             <input id="NewPlaceName" />
+            <input id="PlaceLat" />
+            <input id="PlaceLong" />
         </div>
         
         <div class="col-md-2" id="Save">

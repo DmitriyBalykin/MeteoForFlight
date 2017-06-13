@@ -30,3 +30,12 @@ div.map {
 div#meteoTable {
     height: 800px;
 }
+
+div.error-container {
+    color: red;
+    font-weight: 600;
+}
+
+img.flag {
+    width: 30px;
+}

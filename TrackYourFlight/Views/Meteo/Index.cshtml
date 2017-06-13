@@ -1,6 +1,10 @@
 ﻿@{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Meteo";
     Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section scripts{
+    @Scripts.Render("~/bundles/meteo")
 }
 
 <h2 data-bind="text: 'Forecast for ' + GeoPoint.Name+', '+GeoPoint.Country"></h2>
@@ -23,16 +27,16 @@
     <div>
         <table>
             <tbody data-bind="foreach: ForecastListViewModel">
-                <tr class="row">
-                    <td>
-                        <div data-bind="text: Day"></div>
-                    </td>
-                    <td>
-                        <div class="col-md-10">
-                            <div data-bind="simpleGrid: DayGridViewModel"></div>
-                        </div>
-                    </td>
-                </tr>
+            <tr class="row">
+                <td>
+                    <div data-bind="text: Day"></div>
+                </td>
+                <td>
+                    <div class="col-md-10">
+                        <div data-bind="simpleGrid: DayGridViewModel"></div>
+                    </div>
+                </td>
+            </tr>
             </tbody>
         </table>
     </div>

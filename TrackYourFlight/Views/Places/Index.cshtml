@@ -1,0 +1,66 @@
+﻿@{
+    ViewBag.Title = "Places";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section scripts{
+    @Scripts.Render("~/bundles/places")
+}
+
+<h2>Add Or Edit Place</h2>
+
+<div class="container container-fluid">
+    <div class="row">
+        <div id="CountrySelect" class="col-md-12">
+            <button type="button" class="dropdown-toggle" data-toggle="dropdown">
+                <span data-bind="text: SelectedCountry().Name"></span>
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" data-bind="foreach: Countries">
+                <li>
+                    <a href="javscript:void(0);" data-bind="click: $parent.OnCountrySelected(Name)">
+                        <span data-bind="text: Name"></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <div id="PlaceSelect">
+                <button type="button" class="dropdown-toggle" data-toggle="dropdown">
+                    <span data-bind="text: SelectedPlace()"></span>
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu" data-bind="foreach: ExistingPlaces()">
+                    <li>
+                        <a href="javscript:void(0);" data-bind="click: $parent.OnPlaceSelected(Name)">
+                            <span data-bind="text: Name"></span>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-md-2" id="PlaceInputSwitch">
+            <input type="checkbox" id="CreateNewPlaceSwitch" data-bind="checked: IsCreatePlaceSelected()">
+            <label for="CreateNewPlaceSwitch">Create new place</label>
+        </div>
+
+        <div class="col-md-4" id="NewPlace">
+            <input id="NewPlaceName" />
+        </div>
+        
+        <div class="col-md-2" id="Save">
+            <button data-bind="click: SavePlace">Save Place</button>
+        </div>
+
+    </div>
+</div>
+
+<div class="row">
+    <div id="PlacesMap">
+        <div id="map" class="map col-md-12 progress">Map is loading...</div>
+    </div>
+</div>

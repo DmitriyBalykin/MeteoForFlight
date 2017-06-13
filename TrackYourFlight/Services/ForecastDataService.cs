@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Data;
 using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Web;
 using TrackYourFlight.DataContext;
 using TrackYourFlight.Dto;
 using TrackYourFlight.Interfaces;
@@ -47,7 +49,16 @@ namespace TrackYourFlight.Services
                 {
                     var httpClient = new HttpClient();
                     var uri = GetGfsDataUrl(time, point, hoursInterval);
-                    forecastData.Value = await httpClient.GetStringAsync(uri);
+                    var response = await httpClient.GetAsync(uri);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        forecastData.Value = await response.Content.ReadAsStringAsync();
+                    }
+                    else
+                    {
+                        throw new HttpException("Cannot load forecast data from server");
+                    }
 
                     //Consider case when incorrect unparseble data was received
 
@@ -56,15 +67,27 @@ namespace TrackYourFlight.Services
                     forecastData = await dataContext.Forecast.FindAsync(id);
                 }
 
+                if (forecastData == null)
+                {
+                    throw new OperationCanceledException("Cannot fetch forecast data");
+                }
+
                 var resultModel = DiagramForecastParser.Parse(forecastData.Value);
 
                 resultModel.GeoPoint = forecastData.Point;
 
                 return resultModel;
             }
+            catch (HttpException ex)
+            {
+            }
+            catch (OperationCanceledException ex)
+            {
+            }
             catch (Exception ex)
             {
             }
+
             return null;
         }
 

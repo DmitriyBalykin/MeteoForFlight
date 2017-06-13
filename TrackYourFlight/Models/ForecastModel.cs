@@ -30,7 +30,7 @@ namespace TrackYourFlight.Models
 
         public static string GenerateId(CoordinatePoint point, DateTime time)
         {
-            return $"{time:yyyy:MM:dd}_{point}";
+            return $"{time:yyyy.MM.dd}_{point}";
         }
     }
 }

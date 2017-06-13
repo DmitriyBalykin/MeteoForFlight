@@ -15,5 +15,7 @@ namespace TrackYourFlight.Dto.Requests
         public Translation Translations { get; set; }
 
         public string Flag { get; set; }
+
+        public double[] LatLng { get; set; }
     }
 }

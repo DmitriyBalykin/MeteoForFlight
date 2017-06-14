@@ -41,6 +41,9 @@ namespace TrackYourFlight
             bundles.Add(new ScriptBundle("~/bundles/google").Include(
                       "~/Scripts/google/googleanalytics.js"));
 
+            bundles.Add(new ScriptBundle("~/bundles/google").Include(
+                      "~/Scripts/google/googleanalytics.js"));
+
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/site.css"));

@@ -22,7 +22,7 @@ namespace TrackYourFlight.Services
             alternativeFilePath = filePath;
         }
 
-        public async Task<IEnumerable<EuCountry>> GetCountries()
+        public async Task<IEnumerable<Country>> GetCountries()
         {
             var fullPath = string.IsNullOrEmpty(this.alternativeFilePath) ? 
                 HostingEnvironment.MapPath(CountriesFilePath) :
@@ -32,7 +32,7 @@ namespace TrackYourFlight.Services
             {
                 var inputString = await reader.ReadToEndAsync();
 
-                return JsonConvert.DeserializeObject<List<EuCountry>>(inputString);
+                return JsonConvert.DeserializeObject<List<Country>>(inputString);
             }
         }
     }

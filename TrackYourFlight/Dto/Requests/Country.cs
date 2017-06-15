@@ -2,7 +2,7 @@
 
 namespace TrackYourFlight.Dto.Requests
 {
-    public class EuCountry
+    public class Country
     {
         public string Name { get; set; }
 
@@ -17,5 +17,7 @@ namespace TrackYourFlight.Dto.Requests
         public string Flag { get; set; }
 
         public double[] LatLng { get; set; }
+
+        public double? Area { get; set; }
     }
 }

@@ -214,7 +214,7 @@
     <Compile Include="Dto\DayMeteoData.cs" />
     <Compile Include="Dto\MeteoLayerDataModel.cs" />
     <Compile Include="Dto\MeteoStateModel.cs" />
-    <Compile Include="Dto\Requests\EuCountry.cs" />
+    <Compile Include="Dto\Requests\Country.cs" />
     <Compile Include="Dto\Requests\ForecastDataRequest.cs" />
     <Compile Include="Dto\Requests\Translation.cs" />
     <Compile Include="Interfaces\IForecastDataService.cs" />
@@ -232,6 +232,7 @@
     <Compile Include="Services\ForecastDataService.cs" />
     <Compile Include="Utilities\DateTimeParser.cs" />
     <Compile Include="Utilities\DiagramForecastParser.cs" />
+    <Compile Include="WebApiControllers\ApiDataController.cs" />
     <Compile Include="WebApiControllers\GeoDataController.cs" />
     <Compile Include="WebApiControllers\MeteoController.cs" />
     <Compile Include="Global.asax.cs">

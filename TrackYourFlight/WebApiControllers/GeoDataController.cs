@@ -59,18 +59,20 @@ namespace TrackYourFlight.WebApiControllers
         {
             using (var dataContext = new GeoPointsDataContext())
             {
-                try
-                {
-                    dataContext.GeoPoints.Add(point);
-                    await dataContext.SaveChangesAsync();
-                }
-                catch (Exception ex)
-                {
-                    
-                }
-                
+                var storedPoint = dataContext.GeoPoints.Add(point);
+                await dataContext.SaveChangesAsync();
 
-                return null;
+                var pointCountry = (await new CountriesListService().GetCountries())
+                    .Single(country => country.Name.Equals(point.Country, StringComparison.InvariantCultureIgnoreCase));
+
+                return new JsonResult
+                {
+                    Data = new
+                    {
+                        Country = pointCountry,
+                        Place = storedPoint
+                    }
+                };
             }
         }
 
@@ -90,7 +92,17 @@ namespace TrackYourFlight.WebApiControllers
 
                 await dataContext.SaveChangesAsync();
 
-                return null;
+                var pointCountry = (await new CountriesListService().GetCountries())
+                        .Single(country => country.Name.Equals(point.Country, StringComparison.InvariantCultureIgnoreCase));
+
+                return new JsonResult
+                {
+                    Data = new
+                    {
+                        Country = pointCountry,
+                        Place = existingPoint
+                    }
+                };
             }
         }
 

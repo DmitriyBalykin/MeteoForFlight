@@ -30,3 +30,70 @@ div.map {
 div#meteoTable {
     height: 800px;
 }
+
+div.error-container {
+    color: red;
+    font-weight: 600;
+}
+
+.flag img {
+    width: 30px;
+    border: 1px grey solid;
+}
+
+button {
+    min-width: 70px;
+}
+
+table.top-table {
+    border-top: 1px grey solid;
+    margin-top: 20px;
+}
+
+button#Save {
+    vertical-align: top;
+}
+
+.no-margin {
+    margin: 0 !important;
+}
+
+ul.dropdown-menu {
+    top: auto;
+    left: auto;
+}
+
+ul.dropdown-menu > li.head {
+    padding: 3px 20px;
+}
+
+ul.dropdown-menu input {
+    max-width: none;
+    width: 100%;
+}
+
+ul.menu-items-list {
+    max-height: 300px;
+    min-width: 200px;
+    overflow-x: hidden;
+    overflow-y: scroll;
+    padding: 0;
+}
+
+ul.menu-items-list > li {
+    list-style: none;
+    background-color: transparent;
+    padding: 3px 20px;
+}
+
+ul.menu-items-list > li:hover {
+    background-color: lightgrey;
+    cursor: pointer;
+}
+
+ul.menu-items-list > li > a{
+    text-decoration: none;
+    color: black;
+    background-color: transparent;
+    display: block;
+}

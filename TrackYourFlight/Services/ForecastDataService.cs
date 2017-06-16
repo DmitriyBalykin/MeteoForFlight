@@ -1,7 +1,9 @@
 ﻿using System;
-using System.Linq;
+using System.Data;
+using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
+using System.Web;
 using TrackYourFlight.DataContext;
 using TrackYourFlight.Dto;
 using TrackYourFlight.Interfaces;
@@ -39,10 +41,35 @@ namespace TrackYourFlight.Services
                         Value = resultString
                     };
 
-                    dataContext.Forecast.Add(newForecastData);
+                    dataContext.Forecast.Add(newForecastData); // AddOrUpdate
+                    await dataContext.SaveChangesAsync();
+                    forecastData = await dataContext.Forecast.FindAsync(id);
+                }
+                else if (string.IsNullOrEmpty(forecastData.Value))
+                {
+                    var httpClient = new HttpClient();
+                    var uri = GetGfsDataUrl(time, point, hoursInterval);
+                    var response = await httpClient.GetAsync(uri);
+
+                    if (response.IsSuccessStatusCode)
+                    {
+                        forecastData.Value = await response.Content.ReadAsStringAsync();
+                    }
+                    else
+                    {
+                        throw new HttpException("Cannot load forecast data from server");
+                    }
+
+                    //Consider case when incorrect unparseble data was received
+
                     await dataContext.SaveChangesAsync();
 
                     forecastData = await dataContext.Forecast.FindAsync(id);
+                }
+
+                if (forecastData == null)
+                {
+                    throw new OperationCanceledException("Cannot fetch forecast data");
                 }
 
                 var resultModel = DiagramForecastParser.Parse(forecastData.Value);
@@ -51,9 +78,16 @@ namespace TrackYourFlight.Services
 
                 return resultModel;
             }
+            catch (HttpException ex)
+            {
+            }
+            catch (OperationCanceledException ex)
+            {
+            }
             catch (Exception ex)
             {
             }
+
             return null;
         }
 
@@ -67,7 +101,7 @@ namespace TrackYourFlight.Services
                 "&start_min=" + time.Minute +
                 "&n_hrs=" + hoursInterval +
                 "&fcst_len=shortest" +
-                "&airport=" + point.Latitude + "%2C" + point.Longitude +
+                "&airport=" + point.Latitude.ToString(CultureInfo.InvariantCulture) + "%2C" + point.Longitude.ToString(CultureInfo.InvariantCulture) +
                 "&text=Ascii%20text%20%28GSD%20format%29&hydrometeors=false&start=latest";
 
             return new Uri(url);

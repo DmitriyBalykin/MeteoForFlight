@@ -1,0 +1,59 @@
+﻿@{
+    ViewBag.Title = "Places";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section scripts{
+    @Scripts.Render("~/bundles/placesSelector")
+    @Scripts.Render("~/bundles/placesCreator")
+}
+
+<h2>Add Place</h2>
+
+<table class="top-table">
+    <tr>
+        <td>
+            @{ Html.RenderPartial("_PlaceSelector"); }
+        </td>
+    </tr>
+    
+    <tr>
+        <td>
+            <div id="PlacePlaceCreatorElement">
+                <table class="table-condensed">
+                    <tr>
+                        <td>
+                            <input type="checkbox" id="EditPlaceSwitch" data-bind="checked: EditPlaceSelected">
+                            <label for="EditPlaceSwitch" class="no-margin">Edit existing place</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id="NewPlace">
+                            <table class="table-condensed">
+                                <tr>
+                                    <td><label for="NewPlaceName">Name</label></td>
+                                    <td><input id="NewPlaceName" data-bind="textInput: NewPlaceName" /></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="PlaceLat">Latitude</label></td>
+                                    <td><input id="PlaceLat" data-bind="textInput: NewPlaceLat"/></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="PlaceLong">Longitude</label></td>
+                                    <td><input id="PlaceLong" data-bind="textInput: NewPlaceLong"/></td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td>
+                            <button id="Save" data-bind="click: SavePlace">Save Place</button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
+        </td>
+    </tr>
+</table>
+
+<div id="PlacesMap">
+    <div id="map" class="map progress">Map is loading...</div>
+</div>

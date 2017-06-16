@@ -25,8 +25,21 @@ namespace TrackYourFlight
                       "~/Scripts/bootstrap.js",
                       "~/Scripts/respond.js"));
 
-            bundles.Add(new ScriptBundle("~/bundles/site").Include(
+            bundles.Add(new ScriptBundle("~/bundles/meteo").Include(
                       "~/Scripts/site/meteo.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/site-common").Include(
+                      "~/Scripts/site/common.js",
+                      "~/Scripts/site/utils.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/placesCreator").Include(
+                      "~/Scripts/site/placesCreator.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/placesSelector").Include(
+                      "~/Scripts/site/placesSelector.js"));
+
+            bundles.Add(new ScriptBundle("~/bundles/google").Include(
+                      "~/Scripts/google/googleanalytics.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",

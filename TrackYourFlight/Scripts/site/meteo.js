@@ -15,6 +15,33 @@
         Interval: interval
     };
 
+    $.post('api/Meteo/Data', requestData).done(DataLoadedHandler);
+});
+
+var DataLoadedHandler = function (response) {
+    forecastData = response.Data;
+
+    elevations = forecastData.Elevations.map(function (value, index) {
+            return { index: index, elevation: value };
+    });
+
+    var SelectedElevation = ko.observable(elevations[0]);
+
+    var viewModel = {
+        Elevations: elevations,
+        SelectedElevation: SelectedElevation,
+        GeoPoint: forecastData.GeoPoint,
+        ForecastDays: forecastData.GridData,
+        OnElevationSelected: function (data, event) {
+            event.stopPropagation();
+
+            SelectedElevation(data);
+            ShowForecastTable(data);
+
+            return true;
+        }
+    };
+
     $.post('api/Meteo/Data', requestData).done(OnDataLoaded);
 });
 
@@ -103,7 +130,9 @@ var OnDataLoaded = function (response) {
         this.ForecastGridData(data);
     };
 
-    ko.applyBindings(new ViewModel());
+    var meteoElement = $('#MeteoPage')[0];
+
+    ko.applyBindings(new ViewModel(), meteoElement);
 }
 
 function RenderTemplate(data, templateName)
@@ -141,7 +170,12 @@ function RenderTemplate(data, templateName)
                 { headerText: "Pressure", rowText: function (item) { return item.ElevationForecast.Pressure; } },
             ]
         });
-    };
+
+        return {
+            Date: item.Date,
+            MeteoForecasts: meteoData
+        };
+    });
 
     ko.applyBindings(new ViewModel(), node);
 

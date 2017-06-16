@@ -130,7 +130,9 @@ var OnDataLoaded = function (response) {
         this.ForecastGridData(data);
     };
 
-    ko.applyBindings(new ViewModel());
+    var meteoElement = $('#MeteoPage')[0];
+
+    ko.applyBindings(new ViewModel(), meteoElement);
 }
 
 function RenderTemplate(data, templateName)

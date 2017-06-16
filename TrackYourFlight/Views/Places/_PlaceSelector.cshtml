@@ -1,0 +1,55 @@
+﻿<div id="PlaceSelectorElement">
+    <table class="table-condensed">
+        <tr>
+            <td>
+                <div class="flag">
+                    <img id="CountryFlag" data-bind="attr:{src: FlagUrl}" />
+                </div>
+            </td>
+            <td id="CountrySelect">
+                <button type="button" class="dropdown-toggle" data-toggle="dropdown">
+                    <span data-bind="text: SelectedCountry().Name"></span>
+                    <span class="caret"></span>
+                </button>
+                <ul class="dropdown-menu" role="menu">
+                    <li class="head">
+                        <input type="text" id="SearchCountry" data-bind="textInput: SearchCountry" />
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <ul class="menu-items-list" data-bind="foreach: Countries">
+                            <li>
+                                <a href="javscript:void(0);" data-bind="click: $parent.OnCountrySelected">
+                                    <span data-bind="text: Name"></span>
+                                </a>
+                            </li>
+                        </ul>
+                    </li>
+                </ul>
+            </td>
+            <td>
+                <div id="PlaceSelect">
+                    <button type="button" class="dropdown-toggle" data-toggle="dropdown">
+                        <span data-bind="text: SelectedPlace().Name"></span>
+                        <span class="caret" data-bind="visible: IsPlacesLoaded"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu">
+                        <li class="head">
+                            <input type="text" id="SearchPlace" data-bind="textInput: SearchPlace" />
+                        </li>
+                        <li class="divider"></li>
+                        <li>
+                            <ul class="menu-items-list" data-bind="foreach: Places">
+                                <li>
+                                    <a href="javscript:void(0);" data-bind="click: $parent.OnPlaceSelected">
+                                        <span data-bind="text: Name"></span>
+                                    </a>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </td>
+        </tr>
+    </table>
+</div>

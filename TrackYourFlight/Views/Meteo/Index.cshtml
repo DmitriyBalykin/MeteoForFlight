@@ -7,38 +7,38 @@
     @Scripts.Render("~/bundles/meteo")
 }
 
-<h2 data-bind="text: 'Forecast for ' + GeoPoint.Name+', '+GeoPoint.Country"></h2>
+<div id="MeteoPage">
+    <h2 data-bind="text: 'Forecast for ' + GeoPoint.Name+', '+GeoPoint.Country"></h2>
 
-<div class="container container-fluid">
-    <div class="col-md-12">
-        <button type="button" class="dropdown-toggle" data-toggle="dropdown">
-            <span data-bind="text: SelectedElevation().elevation"></span>
-            <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu" role="menu" data-bind="foreach: Elevations">
-            <li>
-                <a href="javscript:void(0);" data-bind="click: $parent.OnElevationSelected">
-                    <span data-bind="text: elevation"></span>
-                </a>
-            </li>
-        </ul>
+    <div class="container container-fluid">
+        <div class="col-md-12">
+            <button type="button" class="dropdown-toggle" data-toggle="dropdown">
+                <span data-bind="text: SelectedElevation().elevation"></span>
+                <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu" role="menu" data-bind="foreach: Elevations">
+                <li>
+                    <a href="javscript:void(0);" data-bind="click: $parent.OnElevationSelected">
+                        <span data-bind="text: elevation"></span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+        <div>
+            <table>
+                <tbody data-bind="foreach: ForecastListViewModel">
+                    <tr class="row">
+                        <td>
+                            <div data-bind="text: Day"></div>
+                        </td>
+                        <td>
+                            <div class="col-md-10">
+                                <div data-bind="simpleGrid: DayGridViewModel"></div>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-
-    <div>
-        <table>
-            <tbody data-bind="foreach: ForecastListViewModel">
-            <tr class="row">
-                <td>
-                    <div data-bind="text: Day"></div>
-                </td>
-                <td>
-                    <div class="col-md-10">
-                        <div data-bind="simpleGrid: DayGridViewModel"></div>
-                    </div>
-                </td>
-            </tr>
-            </tbody>
-        </table>
-    </div>
-
 </div>

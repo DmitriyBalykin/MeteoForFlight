@@ -4,109 +4,56 @@
 }
 
 @section scripts{
-    @Scripts.Render("~/bundles/places")
+    @Scripts.Render("~/bundles/placesSelector")
+    @Scripts.Render("~/bundles/placesCreator")
 }
 
-<h2>Add Or Edit Place</h2>
+<h2>Add Place</h2>
 
 <table class="top-table">
     <tr>
         <td>
-            <table class="table-condensed">
-                <tr>
-                    <td>
-                        <div class="flag">
-                            <img id="CountryFlag" data-bind="attr:{src: FlagUrl}" />
-                        </div>
-                    </td>
-
-                    <td id="CountrySelect">
-                        <button type="button" class="dropdown-toggle" data-toggle="dropdown">
-                            <span data-bind="text: SelectedCountry().Name"></span>
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu" role="menu">
-                            <li class="head">
-                                <input type="text" id="SearchCountry" data-bind="textInput: SearchCountry"/>
-                            </li>
-                            <li class="divider"></li>
-                            <li>
-                                <ul class="menu-items-list" data-bind="foreach: Countries">
-                                    <li>
-                                        <a href="javscript:void(0);" data-bind="click: $parent.OnCountrySelected">
-                                            <span data-bind="text: Name"></span>
-                                        </a>
-                                    </li>
-                                </ul>
-                            </li>
-                        </ul>
-                    </td>
-
-                    <td>
-                        <div id="PlaceSelect">
-                            <button type="button" class="dropdown-toggle" data-toggle="dropdown">
-                                <span data-bind="text: SelectedPlace().Name"></span>
-                                <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu" role="menu">
-                                <li class="head">
-                                    <input type="text" id="SearchPlace" data-bind="textInput: SearchPlace" />
-                                </li>
-                                <li class="divider"></li>
-                                <li>
-                                    <ul class="menu-items-list" data-bind="foreach: ExistingPlaces()">
-                                        <li>
-                                            <a href="javscript:void(0);" data-bind="click: $parent.OnPlaceSelected">
-                                                <span data-bind="text: Name"></span>
-                                            </a>
-                                        </li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </div>
-                    </td>
-
-                    <td>
-                        <input type="checkbox" id="CreateNewPlaceSwitch" data-bind="checked: IsCreatePlaceSelected">
-                        <label for="CreateNewPlaceSwitch" class="no-margin">Create new place</label>
-                    </td>
-                </tr>
-            </table>
+            @{ Html.RenderPartial("_PlaceSelector"); }
         </td>
     </tr>
     
     <tr>
         <td>
-            <table class="table-condensed" data-bind="fadeVisible:IsCreatePlaceSelected">
-                <tr>
-                    <td id="NewPlace">
-                        <table class="table-condensed">
-                            <tr>
-                                <td><label for="NewPlaceName">Name</label></td>
-                                <td><input id="NewPlaceName" /></td>
-                            </tr>
-                            <tr>
-                                <td><label for="PlaceLat">Latitude</label></td>
-                                <td><input id="PlaceLat" /></td>
-                            </tr>
-                            <tr>
-                                <td><label for="PlaceLong">Longitude</label></td>
-                                <td><input id="PlaceLong" /></td>
-                            </tr>
-                        </table>
-                    </td>
-
-                    <td>
-                        <button id="Save" data-bind="click: SavePlace">Save Place</button>
-                    </td>
-                </tr>
-            </table>
+            <div id="PlacePlaceCreatorElement">
+                <table class="table-condensed">
+                    <tr>
+                        <td>
+                            <input type="checkbox" id="EditPlaceSwitch" data-bind="checked: EditPlaceSelected">
+                            <label for="EditPlaceSwitch" class="no-margin">Edit existing place</label>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td id="NewPlace">
+                            <table class="table-condensed">
+                                <tr>
+                                    <td><label for="NewPlaceName">Name</label></td>
+                                    <td><input id="NewPlaceName" data-bind="textInput: NewPlaceName" /></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="PlaceLat">Latitude</label></td>
+                                    <td><input id="PlaceLat" data-bind="textInput: NewPlaceLat"/></td>
+                                </tr>
+                                <tr>
+                                    <td><label for="PlaceLong">Longitude</label></td>
+                                    <td><input id="PlaceLong" data-bind="textInput: NewPlaceLong"/></td>
+                                </tr>
+                            </table>
+                        </td>
+                        <td>
+                            <button id="Save" data-bind="click: SavePlace">Save Place</button>
+                        </td>
+                    </tr>
+                </table>
+            </div>
         </td>
     </tr>
 </table>
 
-<div class="row">
-    <div id="PlacesMap">
-        <div id="map" class="map col-md-12 progress">Map is loading...</div>
-    </div>
+<div id="PlacesMap">
+    <div id="map" class="map progress">Map is loading...</div>
 </div>

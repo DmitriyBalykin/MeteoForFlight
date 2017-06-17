@@ -122,19 +122,34 @@ function myMap() {
     map.addListener('click', editor.OnPlaceSelectedWithMap);
 
     if (navigator.geolocation) {
-        navigator.geolocation.getCurrentPosition(function (position) {
-            MoveMapToPoint(position.coords.latitude, position.coords.longitude);
+        navigator.geolocation.getCurrentPosition(
+            function (position) {
+                MoveMapToPoint(map, position.coords.latitude, position.coords.longitude, true);
 
-            var closestCountry = GetClosestCountry(position.coords.latitude, position.coords.longitude);
+                var closestCountry = GetClosestCountry(position.coords.latitude, position.coords.longitude);
 
-            SetSelectedCountry(closestCountry);
-        });
-    }
-    else {
-        $('#GeoLocationUnavailableError').show();
+                SetSelectedCountry(closestCountry);
+            },
+            function (failure) {
+                if (failure.message.indexOf("Only secure origins are allowed") == 0) {
+                    // TODO: replace with notification popups
+                    $('#GeoLocationNeedsSecureContextError').show();
+
+                    SetDefaultMapState(map);
+                } else {
+                    // TODO: replace with notification popups
+                    $('#GeoLocationUnavailableError').show();
+                    SetDefaultMapState(map);
+                }
+            });
     }
 
     editor.Map = map;
+}
+
+function SetDefaultMapState(map) {
+    MoveMapToPoint(map, 0, 0);
+    map.setZoom(3);
 }
 
 function SetSelectedCountry(country) {

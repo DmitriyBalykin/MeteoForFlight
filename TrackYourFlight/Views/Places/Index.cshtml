@@ -5,10 +5,12 @@
 
 @section scripts{
     @Scripts.Render("~/bundles/placesSelector")
-    @Scripts.Render("~/bundles/placesCreator")
+    @Scripts.Render("~/bundles/placesEditor")
 }
 
 <h2>Add Place</h2>
+
+<div id="GeoLocationUnavailableError" class="error-container" style="display:none">Geolocation disabled. If you are using Chrome please try https link to the web site</div>
 
 <table class="top-table">
     <tr>
@@ -19,7 +21,7 @@
     
     <tr>
         <td>
-            <div id="PlacePlaceCreatorElement">
+            <div id="PlacePlaceEditorElement">
                 <table class="table-condensed">
                     <tr>
                         <td>
@@ -45,7 +47,18 @@
                             </table>
                         </td>
                         <td>
-                            <button id="Save" data-bind="click: SavePlace">Save Place</button>
+                            <table class="table-condensed">
+                                <tr>
+                                    <td>
+                                        <button class="crud-button" id="Save" data-bind="click: SavePlace">Save Place</button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <button class="crud-button" id="Delete" data-bind="click: DeletePlace, enable: EditPlaceSelected">Delete Place</button>
+                                    </td>
+                                </tr>
+                            </table>
                         </td>
                     </tr>
                 </table>

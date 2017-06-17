@@ -32,8 +32,8 @@ namespace TrackYourFlight
                       "~/Scripts/site/common.js",
                       "~/Scripts/site/utils.js"));
 
-            bundles.Add(new ScriptBundle("~/bundles/placesCreator").Include(
-                      "~/Scripts/site/placesCreator.js"));
+            bundles.Add(new ScriptBundle("~/bundles/placesEditor").Include(
+                      "~/Scripts/site/placesEditor.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/placesSelector").Include(
                       "~/Scripts/site/placesSelector.js"));

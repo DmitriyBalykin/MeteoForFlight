@@ -78,6 +78,7 @@ namespace TrackYourFlight.WebApiControllers
 
         // POST: Places/Edit/5
         [System.Web.Http.HttpPost]
+        [System.Web.Http.AllowAnonymous]
         public async Task<JsonResult> EditPlace([FromBody]CoordinatePoint point)
         {
             using (var dataContext = new GeoPointsDataContext())
@@ -108,17 +109,30 @@ namespace TrackYourFlight.WebApiControllers
 
         // POST: Places/Delete/5
         [System.Web.Http.HttpPost]
-        public JsonResult Delete(int id)
+        [System.Web.Http.AllowAnonymous]
+        public async Task<JsonResult> DeletePlace(int id)
         {
-            try
+            using (var dataContext = new GeoPointsDataContext())
             {
-                // TODO: Add delete logic here
+                var existingPoint = await dataContext.GeoPoints.FindAsync(id);
 
-                return null;
-            }
-            catch
-            {
-                return null;
+                var pointCountry = (await new CountriesListService().GetCountries())
+                        .Single(country => country.Name.Equals(existingPoint.Country, StringComparison.InvariantCultureIgnoreCase));
+
+                dataContext.GeoPoints.Remove(existingPoint);
+
+                await dataContext.SaveChangesAsync();
+
+                var newPointToShow = dataContext.GeoPoints.FirstOrDefault();
+
+                return new JsonResult
+                {
+                    Data = new
+                    {
+                        Country = pointCountry,
+                        Place = newPointToShow
+                    }
+                };
             }
         }
     }

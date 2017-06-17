@@ -97,3 +97,15 @@ ul.menu-items-list > li > a{
     background-color: transparent;
     display: block;
 }
+
+button:disabled{
+    color:grey;
+}
+
+button.crud-button{
+    width:100px;
+}
+
+.table-condensed td{
+    vertical-align:top;
+}

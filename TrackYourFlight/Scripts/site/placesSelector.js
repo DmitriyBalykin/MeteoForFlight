@@ -94,7 +94,7 @@ function OnCountriesDataLoaded(result) {
 
     ko.applyBindings(placeSelector, $('#PlaceSelectorElement')[0]);
 
-    RootVM().AddChildVM(placeSelector, 'PlaceSelector');
+    RootVM().RegisterChild(placeSelector, 'PlaceSelector');
 
     placeSelector.OnReady.notifySubscribers();
 }
@@ -109,12 +109,13 @@ function LoadPlacesForCountry(vm, country, place) {
     requestData,
     function (response) {
 
-        var isPlaceLoaded = response.Data.length == 0;
+        var isPlaceLoaded = response.Data.length > 0;
 
-        var places = isPlaceLoaded ? defaultPlaces : response.Data;
+        var places = isPlaceLoaded ? response.Data : defaultPlaces;
         vm.Places(places);
         vm.IsPlacesLoaded(isPlaceLoaded);
         vm.SelectedPlace(place == null ? places[0] : place);
+        vm.PlaceSelected.notifySubscribers();
 
         ReportError(false);
     });

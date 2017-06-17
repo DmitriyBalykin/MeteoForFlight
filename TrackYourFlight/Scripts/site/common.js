@@ -15,7 +15,7 @@ function initRootVM() {
 
         var self = this;
 
-        this.AddChildVM = function (vm, name) {
+        this.RegisterChild = function (vm, name) {
             self[name] = vm;
 
             vm.OnReady.subscribe(function () {

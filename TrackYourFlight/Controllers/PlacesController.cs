@@ -5,6 +5,7 @@ namespace TrackYourFlight.Controllers
     public class PlacesController : Controller
     {
         // GET: Places
+        [RequireHttps]
         public ActionResult Index()
         {
             return View();

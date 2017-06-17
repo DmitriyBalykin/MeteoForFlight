@@ -27,7 +27,7 @@ $(document).ready(function () {
             self.NewPlaceLat(convertedData.Latitude);
             self.NewPlaceLong(convertedData.Longitude);
 
-            SetMarkerToPoint(RootVM().PlaceCreator.Map, convertedData.Latitude, convertedData.Longitude);
+            SetMarkerToPoint(RootVM().PlaceEditor.Map, convertedData.Latitude, convertedData.Longitude);
         };
 
         this.SavePlace = function (data, event) {
@@ -50,16 +50,30 @@ $(document).ready(function () {
             $.post(url, dataToSave, self.OnPlaceSaved, 'json');
         };
 
+        this.DeletePlace = function (data, event) {
+
+            event.stopPropagation();
+
+            var url = 'api/GeoData/DeletePlace/' + RootVM().PlaceSelector.SelectedPlace().Id;
+
+            $.post(url, null, self.OnPlaceDeleted, 'json');
+        };
+
         this.OnPlaceSaved = function (data) {
+            LoadPlacesForCountry(RootVM().PlaceSelector, data.Data.Country, data.Data.Place);
+        };
+
+        this.OnPlaceDeleted = function (data) {
+            var selector = RootVM().PlaceSelector;
             LoadPlacesForCountry(RootVM().PlaceSelector, data.Data.Country, data.Data.Place);
         };
     };
 
-    var placeCreator = new ViewModel();
+    var placeEditor = new ViewModel();
 
-    ko.applyBindings(placeCreator, $('#PlacePlaceCreatorElement')[0]);
+    ko.applyBindings(placeEditor, $('#PlacePlaceEditorElement')[0]);
 
-    RootVM().AddChildVM(placeCreator, 'PlaceCreator');
+    RootVM().RegisterChild(placeEditor, 'PlaceEditor');
 
     //selector events subscriptions
     RootVM().OnReady.subscribe(OnSelectorReady);
@@ -80,16 +94,18 @@ function OnCountrySelected() {
 function OnPlaceSelected() {
 
     var place = RootVM().PlaceSelector.SelectedPlace();
-    var creator = RootVM().PlaceCreator;
+    var editor = RootVM().PlaceEditor;
 
-    MoveMapToPoint(creator.Map, place.Latitude, place.Longitude, true);
+    MoveMapToPoint(editor.Map, place.Latitude, place.Longitude, true);
 
-    if (creator.EditPlaceSelected()) {
-        creator.NewPlaceName(place.Name);
+    if (editor.EditPlaceSelected()) {
+        editor.NewPlaceName(place.Name);
     }
 
-    creator.NewPlaceLat(place.Latitude);
-    creator.NewPlaceLong(place.Longitude);
+    editor.NewPlaceLat(place.Latitude);
+    editor.NewPlaceLong(place.Longitude);
+
+    SetMarkerToPoint(editor.Map, place.Latitude, place.Longitude);
 }
 
 function myMap() {
@@ -99,11 +115,11 @@ function myMap() {
         mapTypeId: google.maps.MapTypeId.ROADMAP
     }
 
-    var placeCreatorVM = RootVM().PlaceCreator;
+    var editor = RootVM().PlaceEditor;
 
     var map = new google.maps.Map(document.getElementById("map"), mapOptions);
 
-    map.addListener('click', placeCreatorVM.OnPlaceSelectedWithMap);
+    map.addListener('click', editor.OnPlaceSelectedWithMap);
 
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(function (position) {
@@ -114,15 +130,18 @@ function myMap() {
             SetSelectedCountry(closestCountry);
         });
     }
+    else {
+        $('#GeoLocationUnavailableError').show();
+    }
 
-    placeCreatorVM.Map = map;
+    editor.Map = map;
 }
 
 function SetSelectedCountry(country) {
 
     RootVM().PlaceSelector.SetSelectedCountry(country);
 
-    var map = RootVM().PlaceCreator.Map;
+    var map = RootVM().PlaceEditor.Map;
 
     MoveMapToPoint(map, country.LatLng[0], country.LatLng[1]);
 
@@ -157,7 +176,7 @@ function SetMarkerToPoint(map, lat, long) {
 
         ClearMarkers();
 
-        var pointName = $('#NewPlaceName').val();
+        var pointName = RootVM().PlaceEditor.NewPlaceName();
 
         if (pointName == null || pointName == '') {
             pointName = NewPointName;
@@ -169,13 +188,13 @@ function SetMarkerToPoint(map, lat, long) {
             title: pointName
         });
 
-        RootVM().PlaceCreator.Markers.push(marker);
+        RootVM().PlaceEditor.Markers.push(marker);
     }
 }
 
 function ClearMarkers() {
-    RootVM().PlaceCreator.Markers.forEach(function (marker) { marker.setMap(null) });
-    RootVM().PlaceCreator.Markers = [];
+    RootVM().PlaceEditor.Markers.forEach(function (marker) { marker.setMap(null) });
+    RootVM().PlaceEditor.Markers = [];
 }
 
 function GetClosestCountry(latitude, longitude) {
@@ -195,8 +214,18 @@ function GetClosestCountry(latitude, longitude) {
 }
 
 function PlaceSelectedSwitchHandler (selected) {
-    var placeNameEl = $('#NewPlaceName');
+    var editor = RootVM().PlaceEditor;
+    var value = NewPointName;
 
-    var value = selected ? RootVM().PlaceSelector.SelectedPlace().Name : NewPointName;
-    placeNameEl.val(value);
+    if (selected) {
+        var place = RootVM().PlaceSelector.SelectedPlace();
+
+        value = place.Name;
+        editor.NewPlaceLat(place.Latitude);
+        editor.NewPlaceLong(place.Longitude);
+
+        SetMarkerToPoint(editor.Map, place.Latitude, place.Longitude);
+    }
+
+    editor.NewPlaceName(value);
 }

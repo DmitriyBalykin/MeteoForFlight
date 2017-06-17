@@ -73,6 +73,8 @@ function OnCountriesDataLoaded(result) {
             },
             write: function (searchPlace) {
 
+                searchPlace = searchPlace.toLowerCase();
+
                 var filteredPlaces = places.filter(function (place) {
                     return place.Name.toLowerCase().indexOf(searchPlace) > -1;
                 });

@@ -39,11 +39,12 @@ $(document).ready(function () {
 
             var dataToSave = RootVM().PlaceSelector.SelectedPlace();
 
-            if (self.EditPlaceSelected()) {
-                dataToSave.Name = self.NewPlaceName();
-                dataToSave.Latitude = self.NewPlaceLat();
-                dataToSave.Longitude = self.NewPlaceLong();
-            } else {
+            dataToSave.Name = self.NewPlaceName();
+            dataToSave.Latitude = self.NewPlaceLat();
+            dataToSave.Longitude = self.NewPlaceLong();
+            dataToSave.Country = RootVM().PlaceSelector.SelectedCountry().Name;
+
+            if (!self.EditPlaceSelected()) {
                 dataToSave.Id = 0;
             }
 

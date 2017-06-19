@@ -1,90 +1,49 @@
 ﻿$(document).ready(function () {
 
-    var time = new Date().toISOString();
+    var self = this;
 
-    var interval = 120;
+    var ViewModel = function () {
 
-    var point = {
-        Latitude: 50.5,
-        Longitude: 30.5
-    };
+        this.RawForecastData = [];
 
-    var requestData = {
-        Time: time,
-        Point: point,
-        Interval: interval
-    };
-
-    $.post('api/Meteo/Data', requestData).done(OnDataLoaded);
-});
-
-var OnDataLoaded = function (response) {
-
-    var pageContext = this;
-
-    this.forecastData = response.Data;
-    this.elevations = this.forecastData.Elevations.map(function (value, index) {
-            return { index: index, elevation: value };
-    });
-
-    this.GetForecastData = function (elevation) {
-
-        if (elevation == null) {
-            elevation = this.elevations[0];
-        }
-
-        var elevationForecastData = this.forecastData.DaysMeteoData.map(function (item) {
-
-            var meteoData = item.MeteoForecasts.map(function (dayData) {
-
+        var data = self.GetForecastData()
+            .map(function (dayItem) {
                 return {
-                    Time: dayData.Time,
-                    CIN: dayData.CIN,
-                    Cape: dayData.Cape,
-                    Helic: dayData.Helic,
-                    PW: dayData.PW,
-                    ElevationForecast: dayData.AllElevationsMeteoData[elevation.index]
+                    Day: new Date(dayItem.Date).toDateString(),
+                    DayGridViewModel: new ko.simpleGrid.viewModel({
+                        data: dayItem.MeteoForecasts,
+                        columns: [
+                            { headerText: "Time", rowText: function (item) { return new Date(item.Time).toLocaleTimeString(); } },
+                            { headerText: "Wind Direction", rowText: function (item) { return item.ElevationForecast.WindDirection; } },
+                            { headerText: "Wind Speed", rowText: function (item) { return item.ElevationForecast.WindSpeed; } },
+                            { headerText: "Temperature", rowText: function (item) { return item.ElevationForecast.Temperature; } },
+                            { headerText: "Dew Point", rowText: function (item) { return item.ElevationForecast.DewPoint; } },
+                            { headerText: "Pressure", rowText: function (item) { return item.ElevationForecast.Pressure; } }
+                        ]
+                    })
                 };
             });
 
-    $.post('api/Meteo/Data', requestData).done(DataLoadedHandler);
-});
+        
+        this.Elevations = ko.observable([]);
+        this.SelectedElevation = ko.observable(0);
 
-var DataLoadedHandler = function (response) {
-    forecastData = response.Data;
+        this.ForecastGridData = ko.observableArray(data);
 
-    elevations = forecastData.Elevations.map(function (value, index) {
-            return { index: index, elevation: value };
-    });
-
-    var SelectedElevation = ko.observable(elevations[0]);
-
-    var viewModel = {
-        Elevations: elevations,
-        SelectedElevation: SelectedElevation,
-        GeoPoint: forecastData.GeoPoint,
-        ForecastDays: forecastData.GridData,
-        OnElevationSelected: function (data, event) {
+        this.OnElevationSelected = function (elevation, event) {
             event.stopPropagation();
 
-            SelectedElevation(data);
-            ShowForecastTable(data);
+            self.SelectedElevation(elevation);
+            self.ShowForecastTable(elevation);
 
             return true;
-        }
+        };
     };
 
-    $.post('api/Meteo/Data', requestData).done(OnDataLoaded);
-});
-
-var OnDataLoaded = function (response) {
-
-    var pageContext = this;
-
-    this.forecastData = response.Data;
-    this.elevations = this.forecastData.Elevations.map(function (value, index) {
-            return { index: index, elevation: value };
-    });
+    this.ShowForecastTable = function (elevation) {
+        var data = self.GetForecastData(elevation);
+        this.ForecastGridData(data);
+    };
 
     this.GetForecastData = function (elevation) {
 
@@ -92,7 +51,7 @@ var OnDataLoaded = function (response) {
             elevation = this.elevations[0];
         }
 
-        var elevationForecastData = this.forecastData.DaysMeteoData.map(function (item) {
+        var elevationForecastData = this.RawForecastData.DaysMeteoData.map(function (item) {
 
             var meteoData = item.MeteoForecasts.map(function (dayData) {
 
@@ -115,101 +74,53 @@ var OnDataLoaded = function (response) {
         return elevationForecastData;
     };
 
-    this.SelectedElevation = ko.observable(this.elevations[0]);
+    var meteo = new ViewModel();
 
-    var ViewModel = function () {
+    RootVM().RegisterChild(meteo, 'Meteo');
 
-        this.Elevations = pageContext.elevations;
-        this.SelectedElevation = pageContext.SelectedElevation;
-        this.GeoPoint = pageContext.forecastData.GeoPoint;
+    ko.applyBindings(meteo, $('#MeteoPage')[0]);
 
-        var data = pageContext
-            .GetForecastData()
-            .map(function (dayItem) {
-                return {
-                    Day: new Date(dayItem.Date).toDateString(),
-                    DayGridViewModel: new ko.simpleGrid.viewModel({
-                        data: dayItem.MeteoForecasts,
-                        columns: [
-                            { headerText: "Time", rowText: function (item) { return new Date(item.Time).toLocaleTimeString(); } },
-                            { headerText: "Wind Direction", rowText: function (item) { return item.ElevationForecast.WindDirection; } },
-                            { headerText: "Wind Speed", rowText: function (item) { return item.ElevationForecast.WindSpeed; } },
-                            { headerText: "Temperature", rowText: function (item) { return item.ElevationForecast.Temperature; } },
-                            { headerText: "Dew Point", rowText: function (item) { return item.ElevationForecast.DewPoint; } },
-                            { headerText: "Pressure", rowText: function (item) { return item.ElevationForecast.Pressure; } }
-                        ]
-                    })
-                };
-            });
+    RootVM().OnReady.subscribe(OnSelectorReady);
+});
 
-        pageContext.ForecastGridData = ko.observableArray(data);
+function OnSelectorReady() {
+    RootVM().PlaceSelector.OnPlaceSelected(OnPlaceSelected);
 
-        this.ForecastListViewModel = pageContext.ForecastGridData();
-
-        this.OnElevationSelected = function (elevation, event) {
-            event.stopPropagation();
-
-            pageContext.SelectedElevation(elevation);
-            pageContext.ShowForecastTable(elevation);
-
-            return true;
-        };
-    };
-
-    this.ShowForecastTable = function (elevation) {
-
-        var data = this.GetForecastData(elevation);
-        this.ForecastGridData(data);
-    };
-
-    var meteoElement = $('#MeteoPage')[0];
-
-    ko.applyBindings(new ViewModel(), meteoElement);
+    LoadForecastData();
 }
 
-function RenderTemplate(data, templateName)
-{
-    var template = $('#' + templateName)[0].innerHTML;
-    var node = document.createElement('div');
-    node.innerHTML = template;
-    ko.cleanNode(node);
+function OnDataLoaded(response) {
 
-    var ViewModel = function () {
+    var meteoVM = RootVM();
 
-        //this.dataGridViewModel = new ko.simpleGrid.viewModel({
-        //    data: items,
-        //    columns: [
-        //        { headerText: "Time", rowText: "Time" },
-        //        { headerText: "Wind", rowText: "Wind" },
-        //        { headerText: "Wind Gusts", rowText: "WindGusts" },
-        //        { headerText: "Humidity", rowText: "Humidity" },
-        //        { headerText: "Cloud Cover", rowText: "Clouds" },
-        //        { headerText: "Precipitation", rowText: "Precipitation" },
-        //        { headerText: "Pressure", rowText: "Pressure" },
-        //        { headerText: "Boundary Layer", rowText: "Boundary" }
-        //    ]
-        //});
-        //};
+    meteoVM.RawForecastData = response.Data;
 
-        this.DayGridViewModel = new ko.simpleGrid.viewModel({
-            data: data.MeteoForecasts,
-            columns: [
-                { headerText: "Time", rowText: function (item) { return item.Time; } },
-                { headerText: "Wind Direction", rowText: function (item) { return item.ElevationForecast.WindDirection; } },
-                { headerText: "Wind Speed", rowText: function (item) { return item.ElevationForecast.WindSpeed; } },
-                { headerText: "Temperature", rowText: function (item) { return item.ElevationForecast.Temperature; } },
-                { headerText: "Dew Point", rowText: function (item) { return item.ElevationForecast.DewPoint; } },
-                { headerText: "Pressure", rowText: function (item) { return item.ElevationForecast.Pressure; } },
-            ]
-        });
-
-        return {
-            Date: item.Date,
-            MeteoForecasts: meteoData
-        };
+    var elevations = forecastData.Elevations.map(function (value, index) {
+            return { index: index, elevation: value };
     });
 
-    ko.applyBindings(new ViewModel(), node);
+    meteoVM.Elevations(elevations);
+    meteoVM.SelectedElevation(elevations[0]);
+}
 
-    return node.innerHTML;
+function OnPlaceSelected() {
+    LoadForecastData();
+}
+
+function LoadForecastData() {
+    var time = new Date().toISOString();
+
+    var interval = 120;
+
+    var point = RootVM().PlaceSelector.SelectedPlace();
+
+    var requestData = {
+        Time: time,
+        Point: point,
+        Interval: interval
+    };
+
+    $.post('api/Meteo/Data', requestData)
+        .done(OnDataLoaded)
+        .fail(ReportError);
 }

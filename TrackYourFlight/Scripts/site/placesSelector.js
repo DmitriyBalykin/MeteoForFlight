@@ -38,7 +38,7 @@ function OnCountriesDataLoaded(result) {
 
             event.stopPropagation();
 
-            SetSelectedCountry(country);
+            self.SetSelectedCountry(country);
 
             self.CountrySelected.notifySubscribers();
         };

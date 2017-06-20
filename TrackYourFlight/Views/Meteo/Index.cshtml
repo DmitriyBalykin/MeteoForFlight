@@ -2,42 +2,59 @@
     ViewBag.Title = "Meteo";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-
 @section scripts{
+    @Scripts.Render("~/bundles/placesSelector")
     @Scripts.Render("~/bundles/meteo")
 }
+<h2>Meteo Forecast</h2>
 
-<div id="MeteoPage">
-    <h2 data-bind="text: 'Forecast for ' + GeoPoint.Name+', '+GeoPoint.Country"></h2>
 
-<div class="container container-fluid">
-    <div class="col-md-12">
-        <button type="button" class="dropdown-toggle" data-toggle="dropdown">
-            <span data-bind="text: SelectedElevation().elevation"></span>
-            <span class="caret"></span>
-        </button>
-        <ul class="dropdown-menu" role="menu" data-bind="foreach: Elevations">
-            <li>
-                <a href="javscript:void(0);" data-bind="click: $parent.OnElevationSelected">
-                    <span data-bind="text: elevation"></span>
-                </a>
-            </li>
-        </ul>
-    </div>
-    <div>
-        <table>
-            <tbody data-bind="foreach: ForecastGridData">
-                <tr class="row">
-                    <td>
-                        <div data-bind="text: Day"></div>
-                    </td>
-                    <td>
-                        <div class="col-md-10">
-                            <div data-bind="simpleGrid: DayGridViewModel"></div>
-                        </div>
-                    </td>
-                </tr>
-            </tbody>
-        </table>
-    </div>
-</div>
+<table class="top-table">
+    <tr>
+        <td>
+            @{ Html.RenderPartial("~/Views/Places/_PlaceSelector.cshtml"); }
+        </td>
+    </tr>
+
+    <tr>
+        <td>
+            <div id="MeteoPage">
+                <div id="MeteoLoadSpinner" class="loader hidden"></div>
+                <div id="MeteoGridContainer" class="container container-fluid hidden">
+                    <div class="pull-right">
+                        <span>At altitude: </span>
+                        <button type="button" class="dropdown-toggle" data-toggle="dropdown">
+                            <span data-bind="text: SelectedElevation().elevation"></span>
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu menu-items-list" role="menu" data-bind="foreach: Elevations">
+                            <li>
+                                <a href="javscript:void(0);" data-bind="click: $parent.OnElevationSelected">
+                                    <span data-bind="text: elevation"></span>
+                                </a>
+                            </li>
+                        </ul>
+
+                        <span>meters</span>
+                    </div>
+                    <div>
+                        <table class="table-bordered table-forecast">
+                            <tbody data-bind="foreach: ForecastGridData">
+                            <tr class="row">
+                                <td>
+                                    <div data-bind="text: Day"></div>
+                                </td>
+                                <td>
+                                    <div data-bind="simpleGrid: DayGridViewModel"></div>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </td>
+    </tr>
+</table>
+

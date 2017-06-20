@@ -14,7 +14,6 @@ $(document).ready(function () {
         this.NewPlaceLat = ko.observable(0);
         this.NewPlaceLong = ko.observable(0);
 
-        this.OnReady = new ko.subscribable();
         this.Markers = [];
 
         this.OnPlaceSelectedWithMap = function (place) {
@@ -65,7 +64,6 @@ $(document).ready(function () {
         };
 
         this.OnPlaceDeleted = function (data) {
-            var selector = RootVM().PlaceSelector;
             LoadPlacesForCountry(RootVM().PlaceSelector, data.Data.Country, data.Data.Place);
         };
     };
@@ -89,12 +87,18 @@ function OnSelectorReady() {
 }
 
 function OnCountrySelected() {
-    SetSelectedCountry(RootVM().PlaceSelector.SelectedCountry());
+
+    MoveMapToCountry(RootVM().PlaceSelector.SelectedCountry(), RootVM().PlaceEditor.Map);
 }
 
 function OnPlaceSelected() {
 
     var place = RootVM().PlaceSelector.SelectedPlace();
+
+    if (!place.Latitude) {
+        return;
+    }
+
     var editor = RootVM().PlaceEditor;
 
     MoveMapToPoint(editor.Map, place.Latitude, place.Longitude, true);
@@ -115,12 +119,14 @@ function myMap() {
         zoom: 10,
         mapTypeId: google.maps.MapTypeId.ROADMAP
     }
-
+    var selector = RootVM().PlaceSelector;
     var editor = RootVM().PlaceEditor;
 
     var map = new google.maps.Map(document.getElementById("map"), mapOptions);
 
     map.addListener('click', editor.OnPlaceSelectedWithMap);
+
+    var placeSet = false;
 
     if (navigator.geolocation) {
         navigator.geolocation.getCurrentPosition(
@@ -129,36 +135,37 @@ function myMap() {
 
                 var closestCountry = GetClosestCountry(position.coords.latitude, position.coords.longitude);
 
-                SetSelectedCountry(closestCountry);
+                RootVM().PlaceSelector.SetSelectedCountry(closestCountry);
+
+                placeSet = true;
             },
             function (failure) {
                 if (failure.message.indexOf("Only secure origins are allowed") == 0) {
                     // TODO: replace with notification popups
                     $('#GeoLocationNeedsSecureContextError').show();
-
-                    SetDefaultMapState(map);
                 } else {
                     // TODO: replace with notification popups
                     $('#GeoLocationUnavailableError').show();
-                    SetDefaultMapState(map);
                 }
             });
+    }
+
+    if (!placeSet) {
+
+        var selectedPlace = selector.SelectedPlace();
+
+        if (selectedPlace.Latitude) {
+            MoveMapToPoint(map, selectedPlace.Latitude, selectedPlace.Longitude, true);
+        } else {
+            MoveMapToCountry(selector.SelectedCountry(), map);
+        }
+        
     }
 
     editor.Map = map;
 }
 
-function SetDefaultMapState(map) {
-    MoveMapToPoint(map, 0, 0);
-    map.setZoom(3);
-}
-
-function SetSelectedCountry(country) {
-
-    RootVM().PlaceSelector.SetSelectedCountry(country);
-
-    var map = RootVM().PlaceEditor.Map;
-
+function MoveMapToCountry(country, map) {
     MoveMapToPoint(map, country.LatLng[0], country.LatLng[1]);
 
     if (country.Area != null) {

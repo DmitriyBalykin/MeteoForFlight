@@ -48,6 +48,7 @@ button {
 table.top-table {
     border-top: 1px grey solid;
     margin-top: 20px;
+    width: 100%;
 }
 
 button#Save {
@@ -56,6 +57,10 @@ button#Save {
 
 .no-margin {
     margin: 0 !important;
+}
+
+.pull-right > .dropdown-menu {
+    right: auto;
 }
 
 ul.dropdown-menu {
@@ -108,4 +113,24 @@ button.crud-button{
 
 .table-condensed td{
     vertical-align:top;
+}
+
+table.table-forecast {
+    width: 100%;
+}
+
+table.table-forecast td{
+    text-align: center;
+}
+
+table.table-forecast th{
+    text-align: center;
+}
+
+table.ko-grid {
+    width: 100%;
+}
+
+table.ko-grid tbody tr:nth-child(odd){
+    background-color: #f0f0f0;
 }

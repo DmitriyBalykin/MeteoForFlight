@@ -18,9 +18,11 @@ function initRootVM() {
         this.RegisterChild = function (vm, name) {
             self[name] = vm;
 
-            vm.OnReady.subscribe(function () {
-                self.OnReady.notifySubscribers();
-            });
+            if (vm.OnReady) {
+                vm.OnReady.subscribe(function () {
+                    self.OnReady.notifySubscribers();
+                });
+            }
         };
     };
 

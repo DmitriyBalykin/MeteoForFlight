@@ -183,7 +183,9 @@ namespace TrackYourFlight.Utilities
 
         private static double GetMetricAltitude(object v)
         {
-            var value = Math.Round(GetDouble(v) * FootLength, Precision);
+            //received data is meters
+            //var value = Math.Round(GetDouble(v) * FootLength, Precision); 
+            var value = Math.Round(GetDouble(v), Precision);
 
             return value;
         }

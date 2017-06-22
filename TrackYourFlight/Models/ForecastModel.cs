@@ -28,9 +28,9 @@ namespace TrackYourFlight.Models
         [DisplayName("ForecastValue")]
         public string Value { get; set; }
 
-        public static string GenerateId(CoordinatePoint point, DateTime time)
+        public static string GenerateId(CoordinatePoint point, DateTime time, string type)
         {
-            return $"{time:yyyy.MM.dd}_{point}";
+            return $"{time:yyyy.MM.dd}_{point}_{type}";
         }
     }
 }

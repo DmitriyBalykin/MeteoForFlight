@@ -89,11 +89,13 @@
     <Compile Include="Deserialization\CountryDeserializationTest.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Controllers\HomeControllerTest.cs" />
+    <Compile Include="Utilities\DetailedForecastParserTest.cs" />
     <Compile Include="Utilities\DiagramForecastParserTest.cs" />
     <Compile Include="Utilities\DateTimeParserTest.cs" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="App.config" />
+    <Content Include="TestData\DetailedForecastData.txt" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

@@ -10,9 +10,23 @@ namespace TrackYourFlight.WebApiControllers
     {
         [System.Web.Http.AllowAnonymous]
         [System.Web.Http.HttpPost]
-        public async Task<ActionResult> Data([FromBody]ForecastDataRequest request)
+        public async Task<ActionResult> SoundingData([FromBody]ForecastDataRequest request)
         {
-            var dataService = new ForecastDataService();
+            var dataService = new SoundingForecastDataService();
+            var meteoData = await dataService.Get(request.Time, request.Point, request.Interval);
+
+            return new JsonResult
+            {
+                JsonRequestBehavior = JsonRequestBehavior.AllowGet,
+                Data = meteoData
+            };
+        }
+
+        [System.Web.Http.AllowAnonymous]
+        [System.Web.Http.HttpPost]
+        public async Task<ActionResult> DetailedData([FromBody]ForecastDataRequest request)
+        {
+            var dataService = new DetailedForecastDataService();
             var meteoData = await dataService.Get(request.Time, request.Point, request.Interval);
 
             return new JsonResult

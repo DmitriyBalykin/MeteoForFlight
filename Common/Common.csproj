@@ -41,6 +41,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Constants\ApiStrings.cs" />
+    <Compile Include="Constants\ForecastTypes.cs" />
     <Compile Include="Localization\MeteoStrings.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>

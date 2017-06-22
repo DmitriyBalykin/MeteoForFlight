@@ -19,6 +19,10 @@
     <tr>
         <td>
             <div id="MeteoPage">
+                <div>
+                    <label for="ForecastType">Forecast Type</label>
+                    <checkbox id="ForecastType" data-bind="checked: ShowDetailedForecast"/>
+                </div>
                 <div id="MeteoLoadSpinner" class="loader hidden"></div>
                 <div id="MeteoGridContainer" class="container container-fluid hidden">
                     <div class="pull-right">

@@ -4,6 +4,7 @@
 
         var self = this;
 
+        this.ShowDetailedForecast = ko.observable(true);
         this.RawForecastData = {};
         this.Elevations = ko.observable([]);
         this.SelectedElevation = ko.observable(0);
@@ -63,7 +64,9 @@ function LoadForecastData() {
         Interval: interval
     };
 
-    $.post('api/Meteo/Data', requestData)
+    var url = 'api/Meteo/' + (RootVM().Meteo.ShowDetailedForecast() ? 'DetailedData' : 'SoundingData');
+
+    $.post(url, requestData)
         .done(OnDataLoaded)
         .fail(ReportError);
 }

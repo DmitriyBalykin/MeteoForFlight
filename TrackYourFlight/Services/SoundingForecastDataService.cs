@@ -1,9 +1,9 @@
 ﻿using System;
-using System.Data;
 using System.Globalization;
 using System.Net.Http;
 using System.Threading.Tasks;
 using System.Web;
+using Common.Constants;
 using TrackYourFlight.DataContext;
 using TrackYourFlight.Dto;
 using TrackYourFlight.Interfaces;
@@ -12,17 +12,15 @@ using TrackYourFlight.Utilities;
 
 namespace TrackYourFlight.Services
 {
-    public class ForecastDataService : IForecastDataService
+    public class SoundingForecastDataService : IForecastDataService
     {
-        private const string BaseUrl = "https://rucsoundings.noaa.gov/get_soundings.cgi?data_source=GFS&latest=latest";
-
         public async Task<ForecastDataModel> Get(DateTime time, CoordinatePoint point, int hoursInterval)
         {
             try
             {
                 var dataContext = new ForecastDataContext();
 
-                var id = ForecastModel.GenerateId(point, time);
+                var id = ForecastModel.GenerateId(point, time, ForecastTypes.SoundingType);
 
                 var forecastData = await dataContext.Forecast.FindAsync(id);
 
@@ -93,7 +91,7 @@ namespace TrackYourFlight.Services
 
         private static Uri GetGfsDataUrl(DateTime time, CoordinatePoint point, int hoursInterval)
         {
-            var url = BaseUrl +
+            var url = ApiStrings.RucSoundingApiUrl +
                 "&start_year=" + time.Year +
                 "&start_month_name=" + $"{time:MM}" +
                 "&start_mday=" + time.Day +
